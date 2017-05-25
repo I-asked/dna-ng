@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012 DotNetAnywhere
+﻿// Copyright (c) 2009 DotNetAnywhere
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
+using System.Collections;
 
-namespace System {
+namespace System.Linq {
+	public interface IGrouping<TKey, TElement> : IEnumerable<TElement>, IEnumerable {
 
-	public static class Activator {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static object CreateInstance(Type type);
+		TKey Key { get; }
+
 	}
-
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012 DotNetAnywhere
+﻿// Copyright (c) 2009 DotNetAnywhere
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,45 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Collections;
+using System.Linq;
 using System.Text;
 
-namespace System {
+namespace System.Linq {
+	public class Lookup<TKey, TElement> : ILookup<TKey, TElement> {
 
-	public static class Activator {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static object CreateInstance(Type type);
+		private Dictionary<TKey, IGrouping<TKey, TElement>> lookup;
+
+		internal Lookup(Dictionary<TKey, List<TElement>> data) {
+			this.lookup = new Dictionary<TKey, IGrouping<TKey, TElement>>(data.Comparer);
+			foreach (var item in data) {
+				this.lookup.Add(item.Key, new Grouping<TKey, TElement>(item.Key, item.Value));
+			}
+		}
+
+		public bool Contains(TKey key) {
+			return this.lookup.ContainsKey(key);
+		}
+
+		public int Count {
+			get {
+				return this.lookup.Count;
+			}
+		}
+
+		public IEnumerable<TElement> this[TKey key] {
+			get {
+				return this.lookup[key];
+			}
+		}
+
+		public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() {
+			return this.lookup.Values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return this.lookup.Values.GetEnumerator();
+		}
+
 	}
-
 }
