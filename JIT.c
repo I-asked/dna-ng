@@ -233,11 +233,6 @@ static U32 GenCombined(tOps *pOps, tOps *pIsDynamic, U32 startOfs, U32 count, U3
 }
 #endif
 
-static SetBreakPoint(tMD_MethodDef *pMethodDef, U32 cilOfs, tOps ops)
-{
-    
-}
-
 static U32* JITit(tMD_MethodDef *pMethodDef, U8 *pCIL, U32 codeSize, tParameter *pLocals, tJITted *pJITted, U32 genCombinedOpcodes, I32 **ppSequencePoints) {
 	U32 maxStack = pJITted->maxStack;
 	U32 i;

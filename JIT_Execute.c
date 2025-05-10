@@ -981,7 +981,7 @@ JIT_CALL_PINVOKE_start:
 		U32 res;
 
 		pCallPInvoke = (tJITCallPInvoke*)(pCurOp - 1);
-		res = PInvoke_Call(pCallPInvoke, pParamsLocals, pCurrentMethodState->pEvalStack, pThread);
+		res = PInvoke_Call(pCallPInvoke, pParamsLocals, pCurrentMethodState->pEvalStack);
 		pCurrentMethodState->stackOfs = res;
 	}
 	goto JIT_RETURN_start;

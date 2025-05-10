@@ -23,10 +23,8 @@
 
 #include "MetaData.h"
 #include "JIT.h"
-#include "String.h"
 
-extern char* invokeJsFunc(STRING libName, STRING funcName, STRING arg0);
 fnPInvoke PInvoke_GetFunction(tMetaData *pMetaData, tMD_ImplMap *pImplMap);
-U32 PInvoke_Call(tJITCallPInvoke *pCall, PTR pParams, PTR pReturnValue, tThread *pCallingThread);
+U32 PInvoke_Call(tJITCallPInvoke *pCall, PTR pParams, PTR pReturnValue);
 
 #endif
