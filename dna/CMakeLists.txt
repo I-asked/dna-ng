@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 4.0)
 
 project(DotNetAnywhere LANGUAGES C)
 
+if (CMAKE_SIZEOF_VOID_P GREATER 4)
+  message(FATAL_ERROR "64-bit targets are not supported yet")
+endif()
+
 set(DNA_PUBLIC_HEADERS
   CLIFile.h
   Compat.h
