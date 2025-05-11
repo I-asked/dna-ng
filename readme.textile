@@ -1,0 +1,18 @@
+h1. DotNetAnywhere NG
+
+DotNetAnywhere (DNA) is a interpreted .NET CIL runtime.
+
+The runtime itself is written in C and has been designed to be as small and portable as possible, allowing .NET software to be used on resource-constrained devices where it is not possible to run a full .NET runtime.
+
+h2. Limitations
+
+DNA only supports 32-bit targets. This is a difficult to fix bug which DNA-NG will attempt to fix in the future.
+
+h2. Building
+
+bc. $ cmake -S dna -B _builddir/Debug \
+        -G 'Unix Makefiles' \
+        -D CMAKE_BUILD_TYPE=Debug \
+        -D CMAKE_INSTALL_PREFIX="${PWD}/install"
+$ cmake --build _builddir/Debug -j
+$ cmake --install _builddir/Debug
