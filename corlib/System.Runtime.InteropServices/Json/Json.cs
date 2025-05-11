@@ -38,7 +38,7 @@ using System.Reflection;
 // that are also part of netstandard). Consider restructuring these assemblies and their
 // references to one another.
 
-namespace Blazor.System.Runtime.InteropServices.Json
+namespace System.Runtime.InteropServices.Json
 {
     // Example usage:
     //

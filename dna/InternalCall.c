@@ -51,8 +51,6 @@
 #include "Delegate.h"
 #include "Reflection.h"
 
-#include "JSInterop.h"
-
 #define MAX_PARAMS 6
 
 typedef struct tInternalCall_ tInternalCall;
@@ -84,7 +82,7 @@ static tInternalCall internalCalls[] = {
 	{NULL, NULL,     "InternalIndexOf", System_String_InternalIndexOf, TYPE_SYSTEM_INT32, 4, {TYPE_SYSTEM_CHAR, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_BOOLEAN}},
 	{NULL, NULL,     "InternalIndexOfAny", System_String_InternalIndexOfAny, TYPE_SYSTEM_INT32, 4, {TYPE_SYSTEM_ARRAY_CHAR, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_BOOLEAN}},
 
-	{NULL, "Activator", "CreateInstance", Framework_JSInterop_Activator_CreateInstance, TYPE_SYSTEM_OBJECT, 1, {TYPE_SYSTEM_TYPE}},
+	//{NULL, "Activator", "CreateInstance", Framework_JSInterop_Activator_CreateInstance, TYPE_SYSTEM_OBJECT, 1, {TYPE_SYSTEM_TYPE}},
 
 	{NULL, "Array", "Internal_GetValue", System_Array_Internal_GetValue, TYPE_SYSTEM_OBJECT, 1, {TYPE_SYSTEM_INT32}},
 	{NULL, NULL,    "Internal_SetValue", System_Array_Internal_SetValue, TYPE_SYSTEM_BOOLEAN, 2, {TYPE_SYSTEM_OBJECT, TYPE_SYSTEM_INT32}},
@@ -183,8 +181,8 @@ static tInternalCall internalCalls[] = {
 	{NULL,                 NULL,     "Internal_Receive", System_Net_Sockets_Internal_Receive, TYPE_SYSTEM_INT32, 6, {TYPE_SYSTEM_INTPTR, TYPE_SYSTEM_ARRAY_BYTE, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INTPTR}},
 	{NULL,                 NULL,     "Internal_Send", System_Net_Sockets_Internal_Send, TYPE_SYSTEM_INT32, 6, {TYPE_SYSTEM_INTPTR, TYPE_SYSTEM_ARRAY_BYTE, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INT32, TYPE_SYSTEM_INTPTR}},
 
-	{"System.Runtime.InteropServices", 	"GCHandle", 	"ToHeapRef", Framework_JSInterop_ToHeapRef, TYPE_SYSTEM_INT32, 1, {TYPE_SYSTEM_OBJECT}}, 
-	{NULL, 								NULL, 			"FromHeapRef", Framework_JSInterop_FromHeapRefImpl, TYPE_SYSTEM_OBJECT, 1, {TYPE_SYSTEM_INT32}}, 
+	//{"System.Runtime.InteropServices", 	"GCHandle", 	"ToHeapRef", Framework_JSInterop_ToHeapRef, TYPE_SYSTEM_INT32, 1, {TYPE_SYSTEM_OBJECT}}, 
+	//{NULL, 								NULL, 			"FromHeapRef", Framework_JSInterop_FromHeapRefImpl, TYPE_SYSTEM_OBJECT, 1, {TYPE_SYSTEM_INT32}}, 
 	{NULL, NULL, NULL, NULL}
 };
 

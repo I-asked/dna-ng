@@ -28,7 +28,6 @@
 #include "Finalizer.h"
 #include "System.Net.Sockets.Socket.h"
 #include "MethodState.h"
-#include "JSInterop.h"
 
 static void ShowUsage() {
 	printf("Usage:\n");
