@@ -119,7 +119,7 @@ void MetaData_Fill_MethodDef(tMD_TypeDef *pParentType, tMD_MethodDef *pMethodDef
 		}
 		totalSize = sizeof(VADDR);
 	}
-	for (i=totalSize>>(sizeof(VADDR)==8?3:2); i<pMethodDef->numberOfParameters; i++) {
+	for (i=totalSize>>((sizeof(VADDR)==4)?2:3); i<pMethodDef->numberOfParameters; i++) {
 		tMD_TypeDef *pTypeDef;
 		U32 size;
 

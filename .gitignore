@@ -1,0 +1,10 @@
+*.pdb
+*.dll
+*.so
+*.o
+*.a
+
+bin/
+obj/
+
+/install/

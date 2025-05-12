@@ -95,7 +95,7 @@ struct tJITCallNative_ {
 
 typedef struct tJITCallPInvoke_ tJITCallPInvoke;
 struct tJITCallPInvoke_ {
-	U32 opCode;
+	VADDR opCode;
 	// The native function to call
 	fnPInvoke fn;
 	// The method that is being called

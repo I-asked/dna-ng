@@ -266,6 +266,7 @@ tMD_TypeDef* Type_GetTypeFromSig(tMetaData *pMetaData, SIG *pSig, tMD_TypeDef **
 			return types[TYPE_SYSTEM_STRING];
 
 		case ELEMENT_TYPE_PTR:
+			(void)MetaData_DecodeSigEntry(pSig);
 			return types[TYPE_SYSTEM_UINTPTR];
 
 		case ELEMENT_TYPE_BYREF:

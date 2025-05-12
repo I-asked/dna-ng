@@ -52,7 +52,8 @@ static tLoadedLib* GetLib(STRING name) {
 			return pLib;
 		}
 	}
-	sprintf(libName, "%s%s", LIB_PREFIX, name);
+	//sprintf(libName, "%s%s", LIB_PREFIX, name);
+	strcpy(libName, name);
 	if (strlen(libName) >= 4) {
 		if (strcmp(".dll", libName + strlen(libName) - 4) == 0) {
 			// Cut off the ".dll" suffix if it's there
@@ -65,6 +66,12 @@ static tLoadedLib* GetLib(STRING name) {
 	pNativeLib = LoadLibraryA(libName);
 #else
 	pNativeLib = dlopen(libName, RTLD_LAZY);
+	if (pNativeLib == NULL) {
+	  const char lib[] = "lib";
+	  memmove(libName + strlen(lib), libName, strlen(libName)+1);
+	  memcpy(libName, lib, strlen(lib));
+    pNativeLib = dlopen(libName, RTLD_LAZY);
+  }
 #endif
 	if (pNativeLib == NULL) {
 		// Failed to load library

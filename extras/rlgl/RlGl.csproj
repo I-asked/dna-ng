@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Target Name="librlgl" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile distclean all clean"/>
+  </Target>
+
+  <Target Name="Clean librlgl" BeforeTargets="CoreClean">
+    <Exec Command="make -f $(ProjectDir)/Makefile distclean"/>
+  </Target>
+
+</Project>
