@@ -332,6 +332,12 @@ tMD_TypeDef* Type_GetTypeFromSig(tMetaData *pMetaData, SIG *pSig, tMD_TypeDef **
 				return ppMethodTypeArgs[entry];
 			}
 
+		case ELEMENT_TYPE_PINNED:
+			{
+			  // TODO:XXX: Actually pin this!
+				return Type_GetTypeFromSig(pMetaData, pSig, ppClassTypeArgs, ppMethodTypeArgs);
+			}
+
 		default:
 			Crash("Type_GetTypeFromSig(): Cannot handle signature element type: 0x%02x", entry);
 			FAKE_RETURN;

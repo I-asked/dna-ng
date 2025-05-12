@@ -962,12 +962,23 @@ cilConv:
 						opCodeBase = (pStackType == types[TYPE_SYSTEM_INT64])?JIT_CONV_FROM_I64:JIT_CONV_FROM_U64;
 						break;
 					case EVALSTACK_INT32:
-					case EVALSTACK_PTR: // Only on 32-bit
 						opCodeBase =
 							(pStackType == types[TYPE_SYSTEM_BYTE] ||
 							pStackType == types[TYPE_SYSTEM_UINT16] ||
 							pStackType == types[TYPE_SYSTEM_UINT32] ||
 							pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
+						break;
+					case EVALSTACK_PTR: // Only on 32-bit
+						opCodeBase =
+							(pStackType == types[TYPE_SYSTEM_BYTE] ||
+							pStackType == types[TYPE_SYSTEM_UINT16] ||
+							pStackType == types[TYPE_SYSTEM_UINT32] ||
+							pStackType == types[TYPE_SYSTEM_UINTPTR])?
+#if __SIZEOF_POINTER__ == 4
+							JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
+#else
+							JIT_CONV_FROM_U64:JIT_CONV_FROM_I64;
+#endif
 						break;
 					case EVALSTACK_F64:
 						opCodeBase = JIT_CONV_FROM_R64;
@@ -979,25 +990,27 @@ cilConv:
 						Crash("JITit() Conv cannot handle stack type %d", pStackType->stackType);
 					}
 					// This is the types that the conversion is to.
-					switch (convOpOffset) {
-					case JIT_CONV_OFFSET_I32:
-						useParam = 1;
-						param = 32 - toBitCount;
-						break;
-					case JIT_CONV_OFFSET_U32:
-						useParam = 1;
-						// Next line is really (1 << toBitCount) - 1
-						// But it's done like this to work when toBitCount == 32
-						param = (((1 << (toBitCount - 1)) - 1) << 1) + 1;
-						break;
-					case JIT_CONV_OFFSET_I64:
-					case JIT_CONV_OFFSET_U64:
-					case JIT_CONV_OFFSET_R32:
-					case JIT_CONV_OFFSET_R64:
-						break;
-					default:
-						Crash("JITit() Conv cannot handle convOpOffset %d", convOpOffset);
-					}
+					if (pStackType->stackType != EVALSTACK_PTR) {
+            switch (convOpOffset) {
+            case JIT_CONV_OFFSET_I32:
+              useParam = 1;
+              param = 32 - toBitCount;
+              break;
+            case JIT_CONV_OFFSET_U32:
+              useParam = 1;
+              // Next line is really (1 << toBitCount) - 1
+              // But it's done like this to work when toBitCount == 32
+              param = (((1 << (toBitCount - 1)) - 1) << 1) + 1;
+              break;
+            case JIT_CONV_OFFSET_I64:
+            case JIT_CONV_OFFSET_U64:
+            case JIT_CONV_OFFSET_R32:
+            case JIT_CONV_OFFSET_R64:
+              break;
+            default:
+              Crash("JITit() Conv cannot handle convOpOffset %d", convOpOffset);
+            }
+          }
 					PushOp(opCodeBase + convOpOffset);
 					if (useParam) {
 						PushU32(param);

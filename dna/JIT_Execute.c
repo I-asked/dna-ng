@@ -195,8 +195,8 @@ U32 opcodeNumUses[JIT_OPCODE_MAXNUM];
 
 #endif
 
-//#undef  OPCODE_USE
-//#define OPCODE_USE(op) printf("use: %s\n", #op);
+#undef  OPCODE_USE
+#define OPCODE_USE(op) printf("use: %s\n", #op);
 
 #define CHECK_FOR_BREAKPOINT() \
 	CheckIfCurrentInstructionHasBreakpoint(pCurrentMethodState, pCurOp - pOps, pOpSequencePoints);
@@ -721,7 +721,7 @@ JIT_LOAD_F64_end:
 JIT_LOADPARAMLOCAL_O_start:
 JIT_LOADPARAMLOCAL_INTNATIVE_start: // Only on 32-bit
 JIT_LOADPARAMLOCAL_PTR_start: // Only on 32-bit
-	OPCODE_USE(JIT_LOADPARAMLOCAL_INT32);
+	OPCODE_USE(JIT_LOADPARAMLOCAL_O);
 	{
 		U32 ofs = GET_OP();
 		VADDR value = PARAMLOCAL_PTR(ofs);
@@ -829,11 +829,22 @@ JIT_LOAD_PARAMLOCAL_ADDR_start:
 JIT_LOAD_PARAMLOCAL_ADDR_end:
 	GO_NEXT();
 
-JIT_STOREPARAMLOCAL_INT32_start:
-JIT_STOREPARAMLOCAL_F32_start:
 JIT_STOREPARAMLOCAL_O_start:
 JIT_STOREPARAMLOCAL_INTNATIVE_start: // Only on 32-bit
 JIT_STOREPARAMLOCAL_PTR_start: // Onlt on 32-bit
+	OPCODE_USE(JIT_STOREPARAMLOCAL_O);
+	{
+		VADDR ofs = GET_OP();
+		VADDR value = (VADDR)POP_O();
+		PARAMLOCAL_PTR(ofs) = value;
+	}
+JIT_STOREPARAMLOCAL_O_end:
+JIT_STOREPARAMLOCAL_INTNATIVE_end:
+JIT_STOREPARAMLOCAL_PTR_end:
+	GO_NEXT();
+
+JIT_STOREPARAMLOCAL_INT32_start:
+JIT_STOREPARAMLOCAL_F32_start:
 	OPCODE_USE(JIT_STOREPARAMLOCAL_INT32);
 	{
 		U32 ofs = GET_OP();
@@ -842,9 +853,6 @@ JIT_STOREPARAMLOCAL_PTR_start: // Onlt on 32-bit
 	}
 JIT_STOREPARAMLOCAL_INT32_end:
 JIT_STOREPARAMLOCAL_F32_end:
-JIT_STOREPARAMLOCAL_O_end:
-JIT_STOREPARAMLOCAL_INTNATIVE_end:
-JIT_STOREPARAMLOCAL_PTR_end:
 	GO_NEXT();
 
 JIT_STOREPARAMLOCAL_INT64_start:
@@ -2425,8 +2433,8 @@ JIT_LOADFUNCTION_start:
 	OPCODE_USE(JIT_LOADFUNCTION);
 	{
 		// This is actually a pointer not a U32
-		U32 value = GET_OP();
-		PUSH_U32(value);
+		VADDR value = GET_OP();
+		PUSH_PTR(value);
 	}
 JIT_LOADFUNCTION_end:
 	GO_NEXT();
@@ -2953,13 +2961,13 @@ loadStaticFieldStart:
 		} else if (op == JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE) {
 			PUSH_VALUETYPE(pFieldDef->pMemory, pFieldDef->memSize, pFieldDef->memSize);
 		} else {
-			U32 value;
+			VADDR value;
 			if (op == JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT) {
-				value = (U32)(pFieldDef->pMemory);
+				value = (VADDR)(pFieldDef->pMemory);
 			} else {
-				value = *(U32*)pFieldDef->pMemory;
+				value = *(VADDR*)pFieldDef->pMemory;
 			}
-			PUSH_U32(value);
+			PUSH_PTR(value);
 		}
 	}
 JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT_end:

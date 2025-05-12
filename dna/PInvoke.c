@@ -166,7 +166,7 @@ typedef U64    (STDCALL *_uCuuuuuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, 
 
 #define MAX_ARGS 16
 U32 PInvoke_Call(tJITCallPInvoke *pCall, PTR pParams, PTR pReturnValue) {
-	U32 _args[MAX_ARGS];
+	VADDR _args[MAX_ARGS];
 	double _argsd[MAX_ARGS];
 	void* _pTempMem[MAX_ARGS];
 	U32 numParams, param, paramTypeNum;
@@ -212,14 +212,13 @@ U32 PInvoke_Call(tJITCallPInvoke *pCall, PTR pParams, PTR pReturnValue) {
 			}
 			_pTempMem[_tempMemOfs] = pString;
 			_tempMemOfs++;
-			_args[_argOfs] = (U32)pString;
+			_args[_argOfs] = (VADDR)pString;
 			_argOfs++;
-			paramOfs += 4;
-		} else if (pParamType == types[TYPE_SYSTEM_INTPTR]) {
-			// Only works for 32-bit
-			_args[_argOfs] = *(U32*)(pParams + paramOfs);
+			paramOfs += sizeof(VADDR);
+		} else if (pParamType == types[TYPE_SYSTEM_INTPTR] || pParamType == types[TYPE_SYSTEM_UINTPTR]) {
+			_args[_argOfs] = *(VADDR*)(pParams + paramOfs);
 			_argOfs++;
-			paramOfs += 4;
+			paramOfs += sizeof(VADDR);
 		} else if (pParamType == types[TYPE_SYSTEM_SINGLE]) {
 			_argsd[_argdOfs] = *(float*)(pParams + paramOfs);
 			_argdOfs++;
@@ -281,16 +280,16 @@ U32 PInvoke_Call(tJITCallPInvoke *pCall, PTR pParams, PTR pReturnValue) {
 	}
 	if (pReturnType == types[TYPE_SYSTEM_STRING]) {
 		if (IMPLMAP_ISCHARSET_ANSI(pImplMap) || IMPLMAP_ISCHARSET_AUTO(pImplMap) || IMPLMAP_ISCHARSET_NOTSPEC(pImplMap)) {
-			*(HEAP_PTR*)pReturnValue = SystemString_FromCharPtrASCII((U8*)(U32)u64Ret);
+			*(HEAP_PTR*)pReturnValue = SystemString_FromCharPtrASCII((U8*)(VADDR)u64Ret);
 		} else if (IMPLMAP_ISCHARSET_UNICODE(pImplMap)) {
-			*(HEAP_PTR*)pReturnValue = SystemString_FromCharPtrUTF16((U16*)(U32)u64Ret);
+			*(HEAP_PTR*)pReturnValue = SystemString_FromCharPtrUTF16((U16*)(VADDR)u64Ret);
 		} else {
 			Crash("PInvoke_Call() Cannot handle return string in specified format");
 		}
 		return sizeof(void*);
 	}
-	if (pReturnType == types[TYPE_SYSTEM_INTPTR]) {
-		*(void**)pReturnValue = (void*)(U32)u64Ret;
+	if (pReturnType == types[TYPE_SYSTEM_INTPTR] || pReturnType == types[TYPE_SYSTEM_UINTPTR]) {
+		*(void**)pReturnValue = (void*)(VADDR)u64Ret;
 		return sizeof(void*);
 	}
 	if (pReturnType == types[TYPE_SYSTEM_SINGLE]) {

@@ -55,6 +55,8 @@
 #define ELEMENT_TYPE_SZARRAY	0x1d
 #define ELEMENT_TYPE_MVAR		0x1e
 
+#define ELEMENT_TYPE_PINNED		0x45
+
 
 extern tMD_TypeDef **types;
 #define TYPE_SYSTEM_OBJECT 0
