@@ -48,6 +48,8 @@ void Crash(char *pMsg, ...) {
 		// Cause a delibrate exception, to get into debugger
 		__debugbreak();
 	}
+#else
+  abort();
 #endif
 
 	exit(1);

@@ -180,7 +180,7 @@ static char* tableDefs[] = {
 	// 0x0F
 	"ssxsii\x02i",
 	// 0x10
-	NULL,
+	"ix\x04x",
 	// 0x11
 	"B*",
 	// 0x12
@@ -486,7 +486,7 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 		}
 	}
 
-	log_f(1, "Loaded MetaData table 0x%02X; %d rows; %d bytes in a row\n", tableID, numRows, rowLen);
+	log_f(1, "Loaded MetaData table 0x%02X; %d rows; %d bytes in a row; %d bytes in CIL row\n", tableID, numRows, rowLen, (pSource - (unsigned char *)*ppTable)/numRows);
 
 	// Update the parameter to the position after this table
 	*ppTable = pSource;

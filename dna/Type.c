@@ -223,6 +223,9 @@ tMD_TypeDef* Type_GetTypeFromSig(tMetaData *pMetaData, SIG *pSig, tMD_TypeDef **
 
 	entry = MetaData_DecodeSigEntry(pSig);
 	switch (entry) {
+		case ELEMENT_TYPE_END:
+			return NULL;
+
 		case ELEMENT_TYPE_VOID:
 			return NULL;
 
@@ -266,7 +269,7 @@ tMD_TypeDef* Type_GetTypeFromSig(tMetaData *pMetaData, SIG *pSig, tMD_TypeDef **
 			return types[TYPE_SYSTEM_STRING];
 
 		case ELEMENT_TYPE_PTR:
-			(void)MetaData_DecodeSigEntry(pSig);
+			(void)Type_GetTypeFromSig(pMetaData, pSig, ppClassTypeArgs, ppMethodTypeArgs);
 			return types[TYPE_SYSTEM_UINTPTR];
 
 		case ELEMENT_TYPE_BYREF:

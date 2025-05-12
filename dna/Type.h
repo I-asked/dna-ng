@@ -24,6 +24,7 @@
 #include "MetaData.h"
 #include "Types.h"
 
+#define ELEMENT_TYPE_END		0x00
 #define ELEMENT_TYPE_VOID		0x01
 #define ELEMENT_TYPE_BOOLEAN	0x02
 #define ELEMENT_TYPE_CHAR		0x03
@@ -50,6 +51,7 @@
 #define ELEMENT_TYPE_UINTPTR	0x19
 
 #define ELEMENT_TYPE_OBJECT		0x1c
+#define ELEMENT_TYPE_ARRAY	0x14
 #define ELEMENT_TYPE_SZARRAY	0x1d
 #define ELEMENT_TYPE_MVAR		0x1e
 
