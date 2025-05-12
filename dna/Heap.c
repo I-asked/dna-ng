@@ -33,6 +33,8 @@
 #include "System.Array.h"
 #include "System.WeakReference.h"
 
+#include "buddy_alloc.h"
+
 // Memory roots are:
 // All threads, all MethodStates - the ParamLocals memory and the evaluation stack
 // All static fields of all types

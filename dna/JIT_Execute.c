@@ -87,7 +87,7 @@ tJITCodeInfo jitCodeGoNext;
 // Pop an arbitrarily-sized value-type from the stack (copies it to the specified memory location)
 #define POP_VALUETYPE(ptr, valueSize, stackDec) memcpy(ptr, pCurEvalStack -= stackDec, valueSize)
 // Pop a Object (heap) pointer value from the stack
-#define POP_O() (*(HEAP_PTR*)(pCurEvalStack -= 4))
+#define POP_O() (*(HEAP_PTR*)(pCurEvalStack -= sizeof(void*)))
 // POP() returns nothing - it just alters the stack offset correctly
 #define POP(numBytes) pCurEvalStack -= numBytes
 // POP_ALL() empties the evaluation stack
@@ -125,6 +125,7 @@ tJITCodeInfo jitCodeGoNext;
 // Easy access to method parameters and local variables
 #define PARAMLOCAL_U32(offset) *(U32*)(pParamsLocals + offset)
 #define PARAMLOCAL_U64(offset) *(U64*)(pParamsLocals + offset)
+#define PARAMLOCAL_PTR(offset) *(VADDR*)(pParamsLocals + offset)
 
 #define THROW(exType) heapPtr = Heap_AllocType(exType); goto throwHeapPtr
 
@@ -146,7 +147,7 @@ static void CreateParameters(PTR pParamsLocals, tMD_MethodDef *pCallMethod, PTR 
 		// If this is being called from JIT_NEW_OBJECT then need to specially push the new object
 		// onto parameter stack position 0
 		*(HEAP_PTR*)pParamsLocals = newObj;
-		ofs = 4;
+		ofs = sizeof(VADDR);
 	} else {
 		ofs = 0;
 	}
@@ -249,9 +250,9 @@ U32 JIT_Execute(tThread *pThread, U32 numInst) {
 
 	// Local copies of thread state variables, to speed up execution
 	// Pointer to next op-code
-	U32 *pOps;
+	VADDR *pOps;
 	I32 *pOpSequencePoints;
-	register U32 *pCurOp;
+	register VADDR *pCurOp;
 	// Pointer to eval-stack position
 	register PTR pCurEvalStack;
 	PTR pTempPtr;
@@ -714,11 +715,22 @@ JIT_LOAD_I64_end:
 JIT_LOAD_F64_end:
 	GO_NEXT();
 
-JIT_LOADPARAMLOCAL_INT32_start:
-JIT_LOADPARAMLOCAL_F32_start:
 JIT_LOADPARAMLOCAL_O_start:
 JIT_LOADPARAMLOCAL_INTNATIVE_start: // Only on 32-bit
 JIT_LOADPARAMLOCAL_PTR_start: // Only on 32-bit
+	OPCODE_USE(JIT_LOADPARAMLOCAL_INT32);
+	{
+		U32 ofs = GET_OP();
+		VADDR value = PARAMLOCAL_PTR(ofs);
+		PUSH_PTR(value);
+	}
+JIT_LOADPARAMLOCAL_O_end:
+JIT_LOADPARAMLOCAL_INTNATIVE_end:
+JIT_LOADPARAMLOCAL_PTR_end:
+	GO_NEXT();
+
+JIT_LOADPARAMLOCAL_INT32_start:
+JIT_LOADPARAMLOCAL_F32_start:
 	OPCODE_USE(JIT_LOADPARAMLOCAL_INT32);
 	{
 		U32 ofs = GET_OP();
@@ -727,9 +739,6 @@ JIT_LOADPARAMLOCAL_PTR_start: // Only on 32-bit
 	}
 JIT_LOADPARAMLOCAL_INT32_end:
 JIT_LOADPARAMLOCAL_F32_end:
-JIT_LOADPARAMLOCAL_O_end:
-JIT_LOADPARAMLOCAL_INTNATIVE_end:
-JIT_LOADPARAMLOCAL_PTR_end:
 	GO_NEXT();
 
 JIT_LOADPARAMLOCAL_INT64_start:
@@ -1002,7 +1011,7 @@ JIT_CALL_NATIVE_start:
 			thisOfs = 0;
 		} else {
 			pThis = *(PTR*)pCurrentMethodState->pParamsLocals;
-			thisOfs = 4;
+			thisOfs = sizeof(VADDR);
 		}
 		// Internal constructors MUST leave the newly created object in the return value
 		// (ie on top of the evaluation stack)

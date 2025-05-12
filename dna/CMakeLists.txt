@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 4.0)
 
 project(DotNetAnywhere LANGUAGES C)
 
-if (CMAKE_SIZEOF_VOID_P GREATER 4)
-  message(FATAL_ERROR "64-bit targets are not supported yet")
-endif()
-
 set(DNA_PUBLIC_HEADERS
   CLIFile.h
   Compat.h
@@ -106,7 +102,7 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if (CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-int-to-pointer-cast)
+  target_compile_options(${PROJECT_NAME} PRIVATE -funsigned-char -Wno-int-to-pointer-cast)
 endif()
 if (UNIX)
   target_link_libraries(${PROJECT_NAME} PUBLIC dl m)

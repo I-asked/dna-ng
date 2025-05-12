@@ -38,7 +38,7 @@ struct tCombinedOpcodesMem_ {
 
 struct tJITted_ {
 	// The JITted opcodes
-	U32 *pOps;
+	VADDR *pOps;
 	// The corresponding sequence points in the original CIL
 	U32 *pOpSequencePoints;
 	// The maximum size of the evaluation stack
@@ -84,7 +84,7 @@ struct tExceptionHeader_ {
 
 typedef struct tJITCallNative_ tJITCallNative;
 struct tJITCallNative_ {
-	U32 opCode;
+	VADDR opCode;
 	// The method meta-data
 	tMD_MethodDef *pMethodDef;
 	// the native pointer to the function

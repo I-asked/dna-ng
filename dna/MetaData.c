@@ -132,10 +132,10 @@ Sources:
 	I: The original table index for this table item
 Destination:
 	x: nowhere, ignore
-	*: 32-bit index into relevant heap;
+	i: 32-bit index into relevant heap;
 		Or coded index - MSB = which table, other 3 bytes = table index
 		Or 32-bit int
-		Or pointer (also RVA)
+	*: pointer (also RVA)
 	s: 16-bit value
 	c: 8-bit value
 */
@@ -143,22 +143,22 @@ static char* tableDefs[] = {
 	// 0x00
 	"sxS*G*GxGx",
 	// 0x01
-	"x*;*S*S*",
+	"x*;iS*S*",
 	// 0x02
-	"x*m*i*S*S*0*\x04*\x06*xclcxcxcx*x*x*x*x*x*x*x*x*x*x*I*x*x*x*x*x*x*x*x*x*x*x*x*",
+	"x*m*iiS*S*0i\x04i\x06ixclcxcxcxix*x*xix*xix*xixixix*Iix*x*x*x*xix*xixix*x*x*x*",
 	// 0x03
 	NULL,
 	// 0x04
-	"x*m*ssxsS*B*x*x*x*x*I*x*",
+	"x*m*ssxsS*B*x*x*xixiIix*",
 	// 0x05
 	NULL,
 	// 0x06
-	"x*m*^*ssssS*B*\x08*x*x*x*x*x*x*I*x*x*x*"
+	"x*m*^*ssssS*B*\x08ix*xix*xix*x*Iixix*x*"
 #ifdef GEN_COMBINED_OPCODES
-	"x*x*x*x*x*x*"
+	"xixixix*x*x*"
 #endif
 #ifdef DIAG_METHOD_CALLS
-	"x*x*x*"
+	"xixixi"
 #endif
 	,
 	// 0x07
@@ -166,59 +166,59 @@ static char* tableDefs[] = {
 	// 0x08
 	"ssssS*",
 	// 0x09
-	"\x02*0*",
+	"\x02i0i",
 	// 0x0A
-	"x*5*S*B*",
+	"x*5iS*B*",
 	// 0x0B
-	"ccccxs1*B*",
+	"ccccxs1iB*",
 	// 0x0C
-	"2*:*B*",
+	"2i:iB*",
 	// 0x0D
 	NULL,
 	// 0x0E
-	"ssxs4*B*",
+	"ssxs4iB*",
 	// 0x0F
-	"ssxsi*\x02*",
+	"ssxsii\x02i",
 	// 0x10
 	NULL,
 	// 0x11
 	"B*",
 	// 0x12
-	"\x02*\x14*",
+	"\x02i\x14i",
 	// 0x13
 	NULL,
 	// 0x14
-	"ssxsS*0*",
+	"ssxsS*0i",
 	// 0x15
-	"\x02*\x17*",
+	"\x02i\x17i",
 	// 0x16
 	NULL,
 	// 0x17
 	"ssxsS*B*",
 	// 0x18
-	"ssxs\06*6*",
+	"ssxs\06i6i",
 	// 0x19
-	"\x02*7*7*",
+	"\x02i7i7i",
 	// 0x1A
 	"S*",
 	// 0x1B
 	"x*m*B*",
 	// 0x1C
-	"ssxs8*S*\x1a*",
+	"ssxs8iS*\x1ai",
 	// 0x1D
-	"^*\x04*",
+	"^i\x04i",
 	// 0x1E
 	NULL,
 	// 0x1F
 	NULL,
 	// 0x20
-	"i*ssssssssi*B*S*S*",
+	"iissssssssiiB*S*S*",
 	// 0x21
 	NULL,
 	// 0x22
 	NULL,
 	// 0x23
-	"ssssssssi*B*S*S*B*",
+	"ssssssssiiB*S*S*B*",
 	// 0x24
 	NULL,
 	// 0x25
@@ -230,13 +230,13 @@ static char* tableDefs[] = {
 	// 0x28
 	NULL,
 	// 0x29
-	"\x02*\x02*",
+	"\x02i\x02i",
 	// 0x2A
-	"ssss<*S*",
+	"ssss<iS*",
 	// 0x2B
-	"x*m*7*B*",
+	"x*m*7iB*",
 	// 0x2C
-	"\x2a*0*",
+	"\x2a*0i",
 };
 
 // Coded indexes use this lookup table.
@@ -312,13 +312,16 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 	void *pRet;
 	unsigned char *pSource = *ppTable;
 	unsigned char *pDest;
-	unsigned int v;
+	VADDR v;
 
 	// Calculate the destination row size from table definition, if it hasn't already been calculated
 	if (tableRowSize[tableID] == 0) {
 		for (i=0; i<defLen; i += 2) {
 			switch (pDef[i+1]) {
 				case '*':
+					rowLen += sizeof(v);
+					break;
+				case 'i':
 					rowLen += 4;
 					break;
 				case 's':
@@ -414,7 +417,7 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 							v = GetU16(pSource);
 							pSource += 2;
 						}
-						v = (unsigned int)(pThis->strings.pStart + v);
+						v = (VADDR)(pThis->strings.pStart + v);
 						break;
 					case 'G': // index into GUID heap
 						if (pThis->index32BitGUID) {
@@ -424,7 +427,7 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 							v = GetU16(pSource);
 							pSource += 2;
 						}
-						v = (unsigned int)(pThis->GUIDs.pGUID1 + ((v-1) * 16));
+						v = (VADDR)(pThis->GUIDs.pGUID1 + ((v-1) * 16));
 						break;
 					case 'B': // index into BLOB heap
 						if (pThis->index32BitBlob) {
@@ -434,15 +437,15 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 							v = GetU16(pSource);
 							pSource += 2;
 						}
-						v = (unsigned int)(pThis->blobs.pStart + v);
+						v = (VADDR)(pThis->blobs.pStart + v);
 						break;
 					case '^': // RVA to convert to pointer
 						v = GetU32(pSource);
 						pSource += 4;
-						v = (unsigned int)RVA_FindData(pRVA, v);
+						v = (VADDR)RVA_FindData(pRVA, v);
 						break;
 					case 'm': // Pointer to this metadata
-						v = (unsigned int)pThis;
+						v = (VADDR)pThis;
 						break;
 					case 'l': // Is this the last table entry?
 						v = (row == numRows - 1);
@@ -459,6 +462,10 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 			}
 			switch (pDef[i+1]) {
 				case '*':
+					*(VADDR*)pDest = v;
+					pDest += sizeof(v);
+					break;
+				case 'i':
 					*(unsigned int*)pDest = v;
 					pDest += 4;
 					break;
@@ -479,7 +486,7 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 		}
 	}
 
-	log_f(1, "Loaded MetaData table 0x%02X; %d rows\n", tableID, numRows);
+	log_f(1, "Loaded MetaData table 0x%02X; %d rows; %d bytes in a row\n", tableID, numRows, rowLen);
 
 	// Update the parameter to the position after this table
 	*ppTable = pSource;

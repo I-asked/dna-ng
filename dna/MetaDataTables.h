@@ -21,6 +21,8 @@
 #if !defined(__METADATATABLES_H)
 #define __METADATATABLES_H
 
+#pragma pack(push, 1)
+
 // Forward typedef's (anything used in MetaData.h must be here)
 typedef struct tMD_MethodDef_ tMD_MethodDef;
 typedef struct tMD_FieldDef_ tMD_FieldDef;
@@ -28,12 +30,15 @@ typedef struct tMD_TypeDef_ tMD_TypeDef;
 typedef struct tMD_MethodSpec_ tMD_MethodSpec;
 typedef struct tMD_ImplMap_ tMD_ImplMap;
 
+#pragma pack(pop)
+
 #include "Types.h"
 #include "JIT.h"
 #include "MetaData.h"
 #include "Generics.h"
 
 // First, the combined tables
+#pragma pack(push, 1)
 
 typedef struct tMDC_ToFieldDef_ tMDC_ToFieldDef;
 struct tMDC_ToFieldDef_ {
@@ -163,6 +168,7 @@ struct tMD_TypeDef_ {
 	// This is only allocated as needed, so defaults to NULL
 	HEAP_PTR typeObject;
 };
+_Static_assert(sizeof(tMD_TypeDef) == 204);
 #define MD_TABLE_TYPEDEF 0x02
 
 struct tMD_FieldDef_ {
@@ -560,5 +566,7 @@ struct tMD_GenericParamConstraint_ {
 	// The type of the constraint (coded index TypeDefOrRef)
 	IDX_TABLE constraint;
 };
+
+#pragma pack(pop)
 
 #endif

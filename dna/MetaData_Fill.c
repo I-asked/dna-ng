@@ -111,15 +111,15 @@ void MetaData_Fill_MethodDef(tMD_TypeDef *pParentType, tMD_MethodDef *pMethodDef
 		pMethodDef->pParams->offset = 0;
 		if (pParentType->isValueType) {
 			// If this is a value-type then the 'this' pointer is actually an IntPtr to the value-type's location
-			pMethodDef->pParams->size = 4;
+			pMethodDef->pParams->size = sizeof(VADDR);
 			pMethodDef->pParams->pTypeDef = types[TYPE_SYSTEM_INTPTR];
 		} else {
-			pMethodDef->pParams->size = 4;
+			pMethodDef->pParams->size = sizeof(VADDR);
 			pMethodDef->pParams->pTypeDef = pParentType;
 		}
-		totalSize = 4;
+		totalSize = sizeof(VADDR);
 	}
-	for (i=totalSize>>2; i<pMethodDef->numberOfParameters; i++) {
+	for (i=totalSize>>(sizeof(VADDR)==8?3:2); i<pMethodDef->numberOfParameters; i++) {
 		tMD_TypeDef *pTypeDef;
 		U32 size;
 

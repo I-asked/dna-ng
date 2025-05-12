@@ -292,7 +292,7 @@ static tCLIFile* LoadPEFile(void *pData) {
 	// Load all metadata
 	{
 		unsigned int versionLen = *(unsigned int*)&(pRawMetaData[12]);
-		unsigned int ofs, numberOfStreams;
+		VADDR ofs, numberOfStreams;
 		void *pTableStream = NULL;
 		unsigned int tableStreamSize;
 		pRet->pVersion = &(pRawMetaData[16]);
@@ -306,7 +306,7 @@ static tCLIFile* LoadPEFile(void *pData) {
 			unsigned int streamSize = *(unsigned int*)&pRawMetaData[ofs+4];
 			unsigned char *pStreamName = &pRawMetaData[ofs+8];
 			void *pStream = pRawMetaData + streamOffset;
-			ofs += (unsigned int)((strlen(pStreamName)+4) & (~0x3)) + 8;
+			ofs += (VADDR)((strlen(pStreamName)+4) & (~0x3)) + 8;
 			if (strcasecmp(pStreamName, "#Strings") == 0) {
 				MetaData_LoadStrings(pMetaData, pStream, streamSize);
 			} else if (strcasecmp(pStreamName, "#US") == 0) {

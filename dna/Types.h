@@ -21,6 +21,9 @@
 #if !defined(__TYPES_H)
 #define __TYPES_H
 
+#include <stdint.h>
+#include <stddef.h>
+
 // Indexes into the user-string heap
 typedef unsigned int IDX_USERSTRINGS;
 
@@ -40,20 +43,17 @@ typedef unsigned short* STRING2; // UTF16 string
 typedef unsigned char* BLOB_;
 typedef unsigned char* GUID_;
 
+typedef uintptr_t VADDR;
+
 // Int types
 typedef long long I64;
 typedef unsigned long long U64;
-
-//#ifdef _WIN32
-
 typedef int I32;
 typedef unsigned int U32;
 typedef short I16;
 typedef unsigned short U16;
 typedef char I8;
 typedef unsigned char U8;
-
-//#endif // _WIN32
 
 typedef union uConvDouble_ uConvDouble;
 union uConvDouble_ {

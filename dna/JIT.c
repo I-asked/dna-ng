@@ -49,7 +49,7 @@
 
 typedef struct tOps_ tOps;
 struct tOps_ {
-	U32 *p;
+	VADDR *p;
 	I32 *pSequencePoints;
 	U32 capacity;
 	U32 ofs;
@@ -62,11 +62,11 @@ struct tTypeStack_ {
 	U32 maxBytes; // The max size of the stack in bytes
 };
 
-#define InitOps(ops_, initialCapacity) ops_.capacity = initialCapacity; ops_.ofs = 0; ops_.p = malloc((initialCapacity) * sizeof(U32)); ops_.pSequencePoints = malloc((initialCapacity) * sizeof(I32));
+#define InitOps(ops_, initialCapacity) ops_.capacity = initialCapacity; ops_.ofs = 0; ops_.p = malloc((initialCapacity) * sizeof(VADDR)); ops_.pSequencePoints = malloc((initialCapacity) * sizeof(I32));
 #define DeleteOps(ops_) free(ops_.p); free(ops_.pSequencePoints)
 
 // Turn this into a MACRO at some point?
-static U32 Translate(U32 op, U32 getDynamic) {
+static VADDR Translate(U32 op, U32 getDynamic) {
 	if (op >= JIT_OPCODE_MAXNUM) {
 		Crash("Illegal opcode: %d", op);
 	}
@@ -74,9 +74,9 @@ static U32 Translate(U32 op, U32 getDynamic) {
 		Crash("Opcode not available: 0x%08x", op);
 	}
 	if (getDynamic) {
-		return (U32)jitCodeInfo[op].isDynamic;
+		return (VADDR)jitCodeInfo[op].isDynamic;
 	} else {
-		return (U32)jitCodeInfo[op].pStart;
+		return (VADDR)jitCodeInfo[op].pStart;
 	}
 }
 
@@ -93,8 +93,8 @@ static U32 Translate(U32 op, U32 getDynamic) {
 #define PushI32(v) PushU32_(&ops, (U32)(v), -1)
 #define PushFloat(v) convFloat.f=(float)(v); PushU32_(&ops, convFloat.u32, -1)
 #define PushDouble(v) convDouble.d=(double)(v); PushU32_(&ops, convDouble.u32.a, -1); PushU32_(&ops, convDouble.u32.b, -1)
-#define PushPTR(ptr) PushU32_(&ops, (U32)(ptr), -1)
-#define PushOp(op) PushU32_(&ops, Translate((U32)(op), 0), nextOpSequencePoint)
+#define PushPTR(ptr) PushU32_(&ops, (VADDR)(ptr), -1)
+#define PushOp(op) PushU32_(&ops, Translate((VADDR)(op), 0), nextOpSequencePoint)
 #define PushOpParam(op, param) PushOp(op); PushU32_(&ops, (U32)(param), -1)
 #endif
 
@@ -124,11 +124,11 @@ static void PushStackType_(tTypeStack *pTypeStack, tMD_TypeDef *pType) {
 	//printf("Stack ofs = %d; Max stack size: %d (0x%x)\n", pTypeStack->ofs, size, size);
 }
 
-static void PushU32_(tOps *pOps, U32 v, I32 opSequencePoint) {
+static void PushU32_(tOps *pOps, VADDR v, I32 opSequencePoint) {
 	if (pOps->ofs >= pOps->capacity) {
 		pOps->capacity <<= 1;
 //		printf("a.pOps->p = 0x%08x size=%d\n", pOps->p, pOps->capacity * sizeof(U32));
-		pOps->p = realloc(pOps->p, pOps->capacity * sizeof(U32));
+		pOps->p = realloc(pOps->p, pOps->capacity * sizeof(VADDR));
 		pOps->pSequencePoints = realloc(pOps->pSequencePoints, pOps->capacity * sizeof(U32));
 	}
 	pOps->pSequencePoints[pOps->ofs] = opSequencePoint;
@@ -233,7 +233,7 @@ static U32 GenCombined(tOps *pOps, tOps *pIsDynamic, U32 startOfs, U32 count, U3
 }
 #endif
 
-static U32* JITit(tMD_MethodDef *pMethodDef, U8 *pCIL, U32 codeSize, tParameter *pLocals, tJITted *pJITted, U32 genCombinedOpcodes, I32 **ppSequencePoints) {
+static VADDR* JITit(tMD_MethodDef *pMethodDef, U8 *pCIL, U32 codeSize, tParameter *pLocals, tJITted *pJITted, U32 genCombinedOpcodes, I32 **ppSequencePoints) {
 	U32 maxStack = pJITted->maxStack;
 	U32 i;
 	U32 cilOfs;
@@ -242,7 +242,7 @@ static U32* JITit(tMD_MethodDef *pMethodDef, U8 *pCIL, U32 codeSize, tParameter 
 	U32 *pJITOffsets;	// To store the JITted code offset of each CIL byte.
 						// Only CIL bytes that are the first byte of an instruction will have meaningful data
 	tTypeStack **ppTypeStacks; // To store the evaluation stack state for forward jumps
-	U32 *pFinalOps;
+	VADDR *pFinalOps;
 	tMD_TypeDef *pStackType;
 	tTypeStack typeStack;
 
@@ -1649,7 +1649,7 @@ combineDone:
 	free(pJITOffsets);
 
 	// Copy ops to some memory of exactly the correct size. To not waste memory.
-	u32Value = ops.ofs * sizeof(U32);
+	u32Value = ops.ofs * sizeof(VADDR);
 	pFinalOps = genCombinedOpcodes?malloc(u32Value):mallocForever(u32Value);
 	memcpy(pFinalOps, ops.p, u32Value);
 	
@@ -1719,7 +1719,7 @@ void JIT_Prepare(tMD_MethodDef *pMethodDef, U32 genCombinedOpcodes) {
 		pCallNative->retOpCode = Translate(JIT_RETURN, 0);
 
 		pJITted->localsStackSize = 0;
-		pJITted->pOps = (U32*)pCallNative;
+		pJITted->pOps = (VADDR*)pCallNative;
 		pJITted->pOpSequencePoints = NULL;
 
 		return;
@@ -1742,7 +1742,7 @@ void JIT_Prepare(tMD_MethodDef *pMethodDef, U32 genCombinedOpcodes) {
 
 		pJITted->localsStackSize = 0;
 		pJITted->maxStack = (pMethodDef->pReturnType == NULL)?0:pMethodDef->pReturnType->stackSize; // For return value
-		pJITted->pOps = (U32*)pCallPInvoke;
+		pJITted->pOps = (VADDR*)pCallPInvoke;
 		pJITted->pOpSequencePoints = NULL;
 
 		return;
