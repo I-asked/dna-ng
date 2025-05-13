@@ -101,6 +101,7 @@ static VADDR Translate(U32 op, U32 getDynamic) {
 #define PushBranch() PushU32_(&branchOffsets, ops.ofs, -1)
 
 #define PushStackType(type) PushStackType_(&typeStack, type);
+#define PeekStackType() (typeStack.ppTypes[typeStack.ofs - 1])
 #define PopStackType() (typeStack.ppTypes[--typeStack.ofs])
 #define PopStackTypeDontCare() typeStack.ofs--
 #define PopStackTypeMulti(number) typeStack.ofs -= number
@@ -305,7 +306,7 @@ static VADDR* JITit(tMD_MethodDef *pMethodDef, U8 *pCIL, U32 codeSize, tParamete
 			tTypeStack *pTypeStack;
 
 			ppTypeStacks[pEx->handlerStart] = pTypeStack = TMALLOC(tTypeStack);
-			pTypeStack->maxBytes = 4;
+			pTypeStack->maxBytes = sizeof(VADDR);
 			pTypeStack->ofs = 1;
 			pTypeStack->ppTypes = TMALLOC(tMD_TypeDef*);
 			pTypeStack->ppTypes[0] = pEx->u.pCatchTypeDef;
@@ -710,7 +711,11 @@ cilCallVirtConstrained:
 				break;
 
 			case CIL_BR_S: // unconditional branch
-				u32Value = (I8)pCIL[cilOfs++];
+				u32Value = (I32)(I8)pCIL[cilOfs++];
+				if (!u32Value) {
+          PushOp(JIT_NOP);
+          break;
+        }
 				goto cilBr;
 
 			case CIL_BR:
@@ -747,7 +752,7 @@ cilBr:
 
 			case CIL_BRFALSE_S:
 			case CIL_BRTRUE_S:
-				u32Value = (I8)pCIL[cilOfs++];
+				u32Value = (I32)(I8)pCIL[cilOfs++];
 				u32Value2 = JIT_BRANCH_FALSE + (op - CIL_BRFALSE_S);
 				goto cilBrFalseTrue;
 
@@ -756,11 +761,12 @@ cilBr:
 				u32Value = GetUnalignedU32(pCIL, &cilOfs);
 				u32Value2 = JIT_BRANCH_FALSE + (op - CIL_BRFALSE);
 cilBrFalseTrue:
-				PopStackTypeDontCare(); // Don't care what it is
+        pTypeA = PopStackType();
 				// Put a temporary CIL offset value into the JITted code. This will be updated later
 				u32Value = cilOfs + (I32)u32Value;
 				MayCopyTypeStack();
 				PushOp(u32Value2);
+        PushU32(pTypeA->stackSize);
 				PushBranch();
 				PushU32(u32Value);
 				break;
@@ -901,8 +907,10 @@ cilBinaryArithOp:
 			case CIL_CONV_I4:
 			case CIL_CONV_OVF_I4: // Fix this later - will never overflow
 			case CIL_CONV_OVF_I4_UN: // Fix this later - will never overflow
+#if __SIZEOF_POINTER__ == 4
 			case CIL_CONV_I: // Only on 32-bit
 			case CIL_CONV_OVF_I_UN: // Only on 32-bit; Fix this later - will never overflow
+#endif
 				toBitCount = 32;
 				toType = TYPE_SYSTEM_INT32;
 cilConvInt32:
@@ -923,8 +931,10 @@ cilConvInt32:
 			case CIL_CONV_U4:
 			case CIL_CONV_OVF_U4: // Fix this later - will never overflow
 			case CIL_CONV_OVF_U4_UN: // Fix this later - will never overflow
+#if __SIZEOF_POINTER__ == 4
 			case CIL_CONV_U: // Only on 32-bit
 			case CIL_CONV_OVF_U_UN: // Only on 32-bit; Fix this later - will never overflow
+#endif
 				toBitCount = 32;
 				toType = TYPE_SYSTEM_UINT32;
 cilConvUInt32:
@@ -933,12 +943,20 @@ cilConvUInt32:
 			case CIL_CONV_I8:
 			case CIL_CONV_OVF_I8: // Fix this later - will never overflow
 			case CIL_CONV_OVF_I8_UN: // Fix this later - will never overflow
+#if __SIZEOF_POINTER__ == 8
+			case CIL_CONV_I: // Only on 32-bit
+			case CIL_CONV_OVF_I_UN: // Only on 32-bit; Fix this later - will never overflow
+#endif
 				toType = TYPE_SYSTEM_INT64;
 				convOpOffset = JIT_CONV_OFFSET_I64;
 				goto cilConv;
 			case CIL_CONV_U8:
 			case CIL_CONV_OVF_U8: // Fix this later - will never overflow
 			case CIL_CONV_OVF_U8_UN: // Fix this later - will never overflow
+#if __SIZEOF_POINTER__ == 8
+			case CIL_CONV_U: // Only on 32-bit
+			case CIL_CONV_OVF_U_UN: // Only on 32-bit; Fix this later - will never overflow
+#endif
 				toType = TYPE_SYSTEM_UINT64;
 				convOpOffset = JIT_CONV_OFFSET_U64;
 				goto cilConv;
@@ -953,57 +971,72 @@ cilConvUInt32:
 				goto cilConv;
 cilConv:
 				pStackType = PopStackType();
-				{
+				if (pStackType != types[toType]
+#if __SIZEOF_POINTER__ == 8
+            && !((toType == TYPE_SYSTEM_UINT64 || toType == TYPE_SYSTEM_INT64) && pStackType->stackType == EVALSTACK_PTR)
+#else
+            && !((toType == TYPE_SYSTEM_UINT64 || toType == TYPE_SYSTEM_INT32) && pStackType->stackType == EVALSTACK_PTR)
+#endif
+				    ) {
 					U32 opCodeBase;
 					U32 useParam = 0, param;
 					// This is the types that the conversion is from.
-					if (pStackType->stackType != EVALSTACK_PTR) {
-            switch (pStackType->stackType) {
-            case EVALSTACK_INT64:
-              opCodeBase = (pStackType == types[TYPE_SYSTEM_INT64])?JIT_CONV_FROM_I64:JIT_CONV_FROM_U64;
-              break;
-            case EVALSTACK_INT32:
-              opCodeBase =
-                (pStackType == types[TYPE_SYSTEM_BYTE] ||
-                pStackType == types[TYPE_SYSTEM_UINT16] ||
-                pStackType == types[TYPE_SYSTEM_UINT32] ||
-                pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
-              break;
-            case EVALSTACK_F64:
-              opCodeBase = JIT_CONV_FROM_R64;
-              break;
-            case EVALSTACK_F32:
-              opCodeBase = JIT_CONV_FROM_R32;
-              break;
-            default:
-              Crash("JITit() Conv cannot handle stack type %d", pStackType->stackType);
-            }
-            // This is the types that the conversion is to.
-            switch (convOpOffset) {
-            case JIT_CONV_OFFSET_I32:
-              useParam = 1;
-              param = 32 - toBitCount;
-              break;
-            case JIT_CONV_OFFSET_U32:
-              useParam = 1;
-              // Next line is really (1 << toBitCount) - 1
-              // But it's done like this to work when toBitCount == 32
-              param = (((1 << (toBitCount - 1)) - 1) << 1) + 1;
-              break;
-            case JIT_CONV_OFFSET_I64:
-            case JIT_CONV_OFFSET_U64:
-            case JIT_CONV_OFFSET_R32:
-            case JIT_CONV_OFFSET_R64:
-              break;
-            default:
-              Crash("JITit() Conv cannot handle convOpOffset %d", convOpOffset);
-            }
-            PushOp(opCodeBase + convOpOffset);
-            if (useParam) {
-              PushU32(param);
-            }
+          switch (pStackType->stackType) {
+#if __SIZEOF_POINTER__ == 8
+          case EVALSTACK_PTR:
+#endif
+          case EVALSTACK_INT64:
+            opCodeBase =
+              (pStackType == types[TYPE_SYSTEM_BYTE] ||
+              pStackType == types[TYPE_SYSTEM_UINT16] ||
+              pStackType == types[TYPE_SYSTEM_UINT64] ||
+              pStackType == types[TYPE_SYSTEM_INT64] ||
+              pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U64:JIT_CONV_FROM_I64;
+            break;
+#if __SIZEOF_POINTER__ != 8
+          case EVALSTACK_PTR:
+#endif
+          case EVALSTACK_INT32:
+            opCodeBase =
+              (pStackType == types[TYPE_SYSTEM_BYTE] ||
+              pStackType == types[TYPE_SYSTEM_UINT16] ||
+              pStackType == types[TYPE_SYSTEM_UINT32] ||
+              pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
+            break;
+          case EVALSTACK_F64:
+            opCodeBase = JIT_CONV_FROM_R64;
+            break;
+          case EVALSTACK_F32:
+            opCodeBase = JIT_CONV_FROM_R32;
+            break;
+          default:
+            Crash("JITit() Conv cannot handle stack type %d", pStackType->stackType);
           }
-				}
+          // This is the types that the conversion is to.
+          switch (convOpOffset) {
+          case JIT_CONV_OFFSET_I32:
+            useParam = 1;
+            param = 32 - toBitCount;
+            break;
+          case JIT_CONV_OFFSET_U32:
+            useParam = 1;
+            // Next line is really (1 << toBitCount) - 1
+            // But it's done like this to work when toBitCount == 32
+            param = (((1 << (toBitCount - 1)) - 1) << 1) + 1;
+            break;
+          case JIT_CONV_OFFSET_I64:
+          case JIT_CONV_OFFSET_U64:
+          case JIT_CONV_OFFSET_R32:
+          case JIT_CONV_OFFSET_R64:
+            break;
+          default:
+            Crash("JITit() Conv cannot handle convOpOffset %d", convOpOffset);
+          }
+          PushOp(opCodeBase + convOpOffset);
+          if (useParam) {
+            PushU32(param);
+          }
+        }
 				PushStackType(types[toType]);
 				break;
 				}
@@ -1209,7 +1242,11 @@ conv2:
 
 			case CIL_LDELEM_REF:
 				PopStackTypeMulti(2); // Don't care what any of these are
+#if __SIZEOF_POINTER__ == 8
+				PushOp(JIT_LOAD_ELEMENT_I64);
+#else
 				PushOp(JIT_LOAD_ELEMENT_U32);
+#endif
 				PushStackType(types[TYPE_SYSTEM_OBJECT]);
 				break;
 
@@ -1232,13 +1269,18 @@ conv2:
 			case CIL_STELEM_I2:
 			case CIL_STELEM_I4:
 			case CIL_STELEM_R4:
+#if __SIZEOF_POINTER__ == 4
 			case CIL_STELEM_REF:
+#endif
 				PopStackTypeMulti(3); // Don't care what any of these are
 				PushOp(JIT_STORE_ELEMENT_32);
 				break;
 
 			case CIL_STELEM_I8:
 			case CIL_STELEM_R8:
+#if __SIZEOF_POINTER__ == 8
+			case CIL_STELEM_REF:
+#endif
 				PopStackTypeMulti(3); // Don't care what any of these are
 				PushOp(JIT_STORE_ELEMENT_64);
 				break;
@@ -1484,12 +1526,19 @@ cilLeave:
 				case CILX_CLT_UN:
 					pTypeB = PopStackType();
 					pTypeA = PopStackType();
-					if ((pTypeA->stackType == EVALSTACK_INT32 && pTypeB->stackType == EVALSTACK_INT32) ||
-						(pTypeA->stackType == EVALSTACK_O && pTypeB->stackType == EVALSTACK_O) ||
-						// Next line: only on 32-bit
-						(pTypeA->stackType == EVALSTACK_PTR && pTypeB->stackType == EVALSTACK_PTR)) {
+					if ((pTypeA->stackType == EVALSTACK_INT32 && pTypeB->stackType == EVALSTACK_INT32)
+#if __SIZEOF_POINTER__ == 4
+					    || (pTypeA->stackType == EVALSTACK_O && pTypeB->stackType == EVALSTACK_O)
+              || (pTypeA->stackType == EVALSTACK_PTR && pTypeB->stackType == EVALSTACK_PTR)
+#endif
+            ) {
 						PushOp(JIT_CEQ_I32I32 + (op - CILX_CEQ));
-					} else if (pTypeA->stackType == EVALSTACK_INT64 && pTypeB->stackType == EVALSTACK_INT64) {
+					} else if ((pTypeA->stackType == EVALSTACK_INT64 && pTypeB->stackType == EVALSTACK_INT64)
+#if __SIZEOF_POINTER__ == 8
+					    || (pTypeA->stackType == EVALSTACK_O && pTypeB->stackType == EVALSTACK_O)
+              || (pTypeA->stackType == EVALSTACK_PTR && pTypeB->stackType == EVALSTACK_PTR)
+#endif
+            ) {
 						PushOp(JIT_CEQ_I64I64 + (op - CILX_CEQ));
 					} else if (pTypeA->stackType == EVALSTACK_F32 && pTypeB->stackType == EVALSTACK_F32) {
 						PushOp(JIT_CEQ_F32F32 + (op - CILX_CEQ));
@@ -1636,6 +1685,8 @@ combineDone:
 	// Change maxStack to indicate the number of bytes needed on the evaluation stack.
 	// This is the largest number of bytes needed by all objects/value-types on the stack,
 	pJITted->maxStack = typeStack.maxBytes;
+
+	//printf("Max stack size: %d (0x%x)\n", typeStack.maxBytes, typeStack.maxBytes);
 
 	free(typeStack.ppTypes);
 

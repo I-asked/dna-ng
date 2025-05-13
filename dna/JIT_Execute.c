@@ -127,6 +127,8 @@ tJITCodeInfo jitCodeGoNext;
 #define PARAMLOCAL_U64(offset) *(U64*)(pParamsLocals + offset)
 #define PARAMLOCAL_PTR(offset) *(VADDR*)(pParamsLocals + offset)
 
+//#include <signal.h>
+//#define THROW(exType) heapPtr = Heap_AllocType(exType); printf("RAISE\n"); raise(SIGTRAP); goto throwHeapPtr
 #define THROW(exType) heapPtr = Heap_AllocType(exType); goto throwHeapPtr
 
 static void CheckIfCurrentInstructionHasBreakpoint(tMethodState* pMethodState, U32 opOffset, I32* pOpSequencePoints)
@@ -195,7 +197,9 @@ U32 opcodeNumUses[JIT_OPCODE_MAXNUM];
 
 #endif
 
+//#include <signal.h>
 //#undef  OPCODE_USE
+//#define OPCODE_USE(op) printf("eval op at %p: %s; stack = %d (0x%X)\n", pCurOp, #op, pCurEvalStack - pCurrentMethodState->pEvalStack, pCurEvalStack - pCurrentMethodState->pEvalStack);
 //#define OPCODE_USE(op) printf("eval op at %p: %s\n", pCurOp, #op); raise(SIGTRAP);
 
 #define CHECK_FOR_BREAKPOINT() \
@@ -1046,7 +1050,7 @@ JIT_CALL_NATIVE_end:
 
 JIT_RETURN_start:
 	OPCODE_USE(JIT_RETURN);
-	//printf("Returned from %s() to %s()\n", pCurrentMethodState->pMethod->name, (pCurrentMethodState->pCaller)?pCurrentMethodState->pCaller->pMethod->name:"<none>");
+	//printf("Returned from %s() to %s()", pCurrentMethodState->pMethod->name, (pCurrentMethodState->pCaller)?pCurrentMethodState->pCaller->pMethod->name:(STRING)"<none>");
 	if (pCurrentMethodState->pCaller == NULL) {
 		// End of thread!
 		if (pCurrentMethodState->pMethod->pReturnType == types[TYPE_SYSTEM_INT32]) {
@@ -1076,6 +1080,7 @@ JIT_RETURN_start:
 		// Delete the current method state and go back to callers method state
 		MethodState_Delete(pThread, &pOldMethodState);
 	}
+	//printf("; sp after call: %p\n", pCurEvalStack);
 	if (pCurrentMethodState->pNextDelegate == NULL) {
 		GO_NEXT();
 	}
@@ -1166,7 +1171,7 @@ JIT_INVOKE_SYSTEM_REFLECTION_METHODBASE_start:
 			U32 invocationParamsArrayLength = SystemArray_GetLength(invocationParamsArray);
 			PTR invocationParamsArrayElements = SystemArray_GetElements(invocationParamsArray);
 			for (U32 paramIndex = 0; paramIndex < invocationParamsArrayLength; paramIndex++) {
-				HEAP_PTR currentParam = (HEAP_PTR)(((U32*)(invocationParamsArrayElements))[paramIndex]);
+				HEAP_PTR currentParam = (HEAP_PTR)(((VADDR*)(invocationParamsArrayElements))[paramIndex]);
 				if (currentParam == NULL) {
 					PUSH_O(NULL);
 				} else {
@@ -1295,7 +1300,7 @@ allCallStart:
 			pCallMethod = pThisType->pVTable[vIndex];
 		}
 callMethodSet:
-		//printf("Calling method: %s\n", Sys_GetMethodDesc(pCallMethod));
+		//printf("Calling method: %s, sp before call: %p\n", Sys_GetMethodDesc(pCallMethod), pCurEvalStack);
 		// Set up the new method state for the called method
 		pCallMethodState = MethodState_Direct(pThread, pCallMethod, pCurrentMethodState, 0);
 		// Set up the parameter stack for the method being called
@@ -1317,6 +1322,9 @@ JIT_BRANCH_start:
 	OPCODE_USE(JIT_BRANCH);
 	{
 		U32 ofs = GET_OP();
+    //if (pCurOp == pOps + ofs) {
+    //  Crash("Bad JUMP!");
+    //}
 		pCurOp = pOps + ofs;
 	}
 JIT_BRANCH_end:
@@ -1344,7 +1352,13 @@ JIT_SWITCH_end:
 JIT_BRANCH_TRUE_start:
 	OPCODE_USE(JIT_BRANCH_TRUE);
 	{
-		U32 value = POP_U32();
+	  U32 stackSize = GET_OP();
+	  VADDR value;
+	  if (stackSize == 8) {
+	    value = POP_U64();
+    } else {
+	    value = POP_U32();
+    }
 		U32 ofs = GET_OP();
 		if (value != 0) {
 			pCurOp = pOps + ofs;
@@ -1356,7 +1370,13 @@ JIT_BRANCH_TRUE_end:
 JIT_BRANCH_FALSE_start:
 	OPCODE_USE(JIT_BRANCH_FALSE);
 	{
-		U32 value = POP_U32();
+	  U32 stackSize = GET_OP();
+	  VADDR value;
+	  if (stackSize == 8) {
+	    value = POP_U64();
+    } else {
+	    value = POP_U32();
+    }
 		U32 ofs = GET_OP();
 		if (value == 0) {
 			pCurOp = pOps + ofs;
@@ -2740,10 +2760,28 @@ JIT_STORE_ELEMENT_start:
 JIT_STORE_ELEMENT_end:
 	GO_NEXT();
 
-JIT_STOREFIELD_INT32_start:
 JIT_STOREFIELD_O_start:
 JIT_STOREFIELD_INTNATIVE_start: // only for 32-bit
 JIT_STOREFIELD_PTR_start: // only for 32-bit
+	OPCODE_USE(JIT_STOREFIELD_O);
+	{
+		tMD_FieldDef *pFieldDef;
+		PTR pMem;
+		VADDR value;
+		HEAP_PTR heapPtr;
+
+		pFieldDef = (tMD_FieldDef*)GET_OP();
+		value = (VADDR)POP_PTR();
+		heapPtr = POP_O();
+		pMem = heapPtr + pFieldDef->memOffset;
+		*(VADDR*)pMem = value;
+	}
+JIT_STOREFIELD_O_end:
+JIT_STOREFIELD_INTNATIVE_end:
+JIT_STOREFIELD_PTR_end:
+	GO_NEXT();
+
+JIT_STOREFIELD_INT32_start:
 JIT_STOREFIELD_F32_start:
 	OPCODE_USE(JIT_STOREFIELD_INT32);
 	{
@@ -2759,9 +2797,6 @@ JIT_STOREFIELD_F32_start:
 		*(U32*)pMem = value;
 	}
 JIT_STOREFIELD_INT32_end:
-JIT_STOREFIELD_O_end:
-JIT_STOREFIELD_INTNATIVE_end:
-JIT_STOREFIELD_PTR_end:
 JIT_STOREFIELD_F32_end:
 	GO_NEXT();
 
@@ -2859,11 +2894,27 @@ JIT_LOAD_FIELD_ADDR_start:
 JIT_LOAD_FIELD_ADDR_end:
 	GO_NEXT();
 
-JIT_STORESTATICFIELD_INT32_start:
-JIT_STORESTATICFIELD_F32_start:
 JIT_STORESTATICFIELD_O_start: // only for 32-bit
 JIT_STORESTATICFIELD_INTNATIVE_start: // only for 32-bit
 JIT_STORESTATICFIELD_PTR_start: // only for 32-bit
+	OPCODE_USE(JIT_STORESTATICFIELD_O);
+	{
+		tMD_FieldDef *pFieldDef;
+		PTR pMem;
+		VADDR value;
+
+		pFieldDef = (tMD_FieldDef*)GET_OP();
+		value = (VADDR)POP_PTR();
+		pMem = pFieldDef->pMemory;
+		*(VADDR*)pMem = value;
+	}
+JIT_STORESTATICFIELD_O_end:
+JIT_STORESTATICFIELD_INTNATIVE_end:
+JIT_STORESTATICFIELD_PTR_end:
+	GO_NEXT();
+
+JIT_STORESTATICFIELD_INT32_start:
+JIT_STORESTATICFIELD_F32_start:
 	OPCODE_USE(JIT_STORESTATICFIELD_INT32);
 	{
 		tMD_FieldDef *pFieldDef;
@@ -2877,9 +2928,6 @@ JIT_STORESTATICFIELD_PTR_start: // only for 32-bit
 	}
 JIT_STORESTATICFIELD_INT32_end:
 JIT_STORESTATICFIELD_F32_end:
-JIT_STORESTATICFIELD_O_end:
-JIT_STORESTATICFIELD_INTNATIVE_end:
-JIT_STORESTATICFIELD_PTR_end:
 	GO_NEXT();
 
 JIT_STORESTATICFIELD_F64_start:
@@ -2914,22 +2962,41 @@ JIT_STORESTATICFIELD_VALUETYPE_end:
 	GO_NEXT();
 
 JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT_start:
+#if __SIZEOF_POINTER__ == 8
+	OPCODE_USE(JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT);
+#endif
 	op = JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT;
 	goto loadStaticFieldStart;
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE_start:
+#if __SIZEOF_POINTER__ == 8
+	OPCODE_USE(JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE);
+#endif
 	op = JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE;
 	goto loadStaticFieldStart;
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_F64_start:
+#if __SIZEOF_POINTER__ == 8
+	OPCODE_USE(JIT_LOADSTATICFIELD_CHECKTYPEINIT_F64);
+#endif
 	op = JIT_LOADSTATICFIELD_CHECKTYPEINIT_F64;
 	goto loadStaticFieldStart;
-JIT_LOADSTATICFIELD_CHECKTYPEINIT_INT32_start:
-JIT_LOADSTATICFIELD_CHECKTYPEINIT_F32_start:
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_O_start: // Only for 32-bit
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_INTNATIVE_start: // Only for 32-bit
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_PTR_start: // Only for 32-bit
+#if __SIZEOF_POINTER__ == 8
+	OPCODE_USE(JIT_LOADSTATICFIELD_CHECKTYPEINIT_O);
+	op = JIT_LOADSTATICFIELD_CHECKTYPEINIT_O;
+	goto loadStaticFieldStart;
+#endif
+JIT_LOADSTATICFIELD_CHECKTYPEINIT_INT32_start:
+JIT_LOADSTATICFIELD_CHECKTYPEINIT_F32_start:
+#if __SIZEOF_POINTER__ == 8
+	OPCODE_USE(JIT_LOADSTATICFIELD_CHECKTYPEINIT_INT32);
+#endif
 	op = 0;
 loadStaticFieldStart:
+#if __SIZEOF_POINTER__ == 4
 	OPCODE_USE(JIT_LOADSTATICFIELD_CHECKTYPEINIT_INT32);
+#endif
 	{
 		tMD_FieldDef *pFieldDef;
 		tMD_TypeDef *pParentType;
@@ -2960,15 +3027,13 @@ loadStaticFieldStart:
 			PUSH_U64(value);
 		} else if (op == JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE) {
 			PUSH_VALUETYPE(pFieldDef->pMemory, pFieldDef->memSize, pFieldDef->memSize);
-		} else {
-			VADDR value;
-			if (op == JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT) {
-				value = (VADDR)(pFieldDef->pMemory);
-			} else {
-				value = *(VADDR*)pFieldDef->pMemory;
-			}
-			PUSH_PTR(value);
-		}
+		} else if (op == JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT) {
+      PUSH_PTR((VADDR)(pFieldDef->pMemory));
+    } else if (op == JIT_LOADSTATICFIELD_CHECKTYPEINIT_O) {
+      PUSH_PTR(*(VADDR*)(pFieldDef->pMemory));
+    } else {
+      PUSH_U32(*(U32*)(pFieldDef->pMemory));
+    }
 	}
 JIT_LOADSTATICFIELDADDRESS_CHECKTYPEINIT_end:
 JIT_LOADSTATICFIELD_CHECKTYPEINIT_VALUETYPE_end:
@@ -3181,9 +3246,10 @@ throwHeapPtr:
 			}
 			pCatchMethodState = pCatchMethodState->pCaller;
 			if (pCatchMethodState == NULL) {
-				Crash("Unhandled exception in %s.%s(): %s.%s",
+				Crash("Unhandled exception in %s.%s() called from %s.%s(): %s.%s",
 					pCurrentMethodState->pMethod->pParentType->name,
-					pCurrentMethodState->pMethod->name, pExType->nameSpace, pExType->name);
+					pCurrentMethodState->pMethod->name, pCurrentMethodState->pCaller?(char*)pCurrentMethodState->pCaller->pMethod->pParentType->name:"",
+					pCurrentMethodState->pCaller?(char*)pCurrentMethodState->pCaller->pMethod->name:"", pExType->nameSpace, pExType->name);
 			}
 		}
 		// Unwind the stack down to the exception handler's stack frame (MethodState)

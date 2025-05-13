@@ -43,7 +43,7 @@ void MetaData_Fill_FieldDef(tMD_TypeDef *pParentType, tMD_FieldDef *pFieldDef, U
 	}
 	MetaData_Fill_TypeDef(pFieldDef->pType, NULL, NULL);
 	// A check for 0 is done so if a type has a field of it's own type it is handled correctly.
-	pFieldDef->memSize = (pFieldDef->pType->stackSize>0)?pFieldDef->pType->stackSize:sizeof(void*);
+	pFieldDef->memSize = (pFieldDef->pType->arrayElementSize>0)?pFieldDef->pType->arrayElementSize:sizeof(void*);
 	pFieldDef->memOffset = memOffset;
 	pFieldDef->pFieldDef = pFieldDef;
 
@@ -291,6 +291,19 @@ void MetaData_Fill_TypeDef_(tMD_TypeDef *pTypeDef, tMD_TypeDef **ppClassTypeArgs
 				} else {
 					MetaData_Fill_FieldDef(pTypeDef, pFieldDef, instanceMemSize, ppClassTypeArgs);
 					instanceMemSize += pFieldDef->memSize;
+
+          tMD_FieldDef *pCurSubFd = pFieldDef;
+					while (pCurSubFd->pType->stackType == EVALSTACK_VALUETYPE && pCurSubFd->memSize > sizeof(VADDR)) {
+					  if (pCurSubFd->pType->numFields == 0) {
+              break;
+            }
+            pCurSubFd = pCurSubFd->pType->ppFields[0];
+          }
+          U32 pad = pFieldDef->memOffset % pCurSubFd->memSize;
+          if (pad > 0) {
+            pFieldDef->memOffset += pad;
+            instanceMemSize += pad;
+          }
 				}
 				pTypeDef->ppFields[i] = pFieldDef;
 			}

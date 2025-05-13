@@ -168,7 +168,6 @@ struct tMD_TypeDef_ {
 	// This is only allocated as needed, so defaults to NULL
 	HEAP_PTR typeObject;
 };
-_Static_assert(sizeof(tMD_TypeDef) == 204);
 #define MD_TABLE_TYPEDEF 0x02
 
 struct tMD_FieldDef_ {
@@ -478,7 +477,7 @@ struct tMD_ImplMap_ {
 // Table 0x1D - FieldRVA
 struct tMD_FieldRVA_ {
 	// The RVA of the initial data for the field
-	U32 rva;
+	VADDR rva;
 	// Index into the field table
 	IDX_TABLE field;
 };

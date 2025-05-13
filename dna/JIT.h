@@ -90,7 +90,7 @@ struct tJITCallNative_ {
 	// the native pointer to the function
 	fnInternalCall fn;
 	// The RET instruction. This is needed when the native function has blocking IO or sleep
-	U32 retOpCode;
+	VADDR retOpCode;
 };
 
 typedef struct tJITCallPInvoke_ tJITCallPInvoke;

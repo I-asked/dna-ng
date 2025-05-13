@@ -43,7 +43,7 @@ tAsyncCall* System_Object_Clone(PTR pThis_, PTR pParams, PTR pReturnValue) {
 }
 
 tAsyncCall* System_Object_GetHashCode(PTR pThis_, PTR pParams, PTR pReturnValue) {
-	*(U32*)pReturnValue = ((((U32)pThis_) >> 2) * 2654435761UL);
+	*(U32*)pReturnValue = (U32)((((VADDR)pThis_) >> 2) * 2654435761UL);
 
 	return NULL;
 }

@@ -61,8 +61,8 @@ tAsyncCall* System_Enum_Internal_GetInfo(PTR pThis_, PTR pParams, PTR pReturnVal
 		retIndex++;
 	}
 
-	*(((HEAP_PTR**)pParams)[1]) = names;
-	*(((HEAP_PTR**)pParams)[2]) = values;
+	*(*(HEAP_PTR**)(pParams + sizeof(VADDR))) = names;
+	*(*(HEAP_PTR**)(pParams + 2*sizeof(VADDR))) = values;
 
 	return NULL;
 }

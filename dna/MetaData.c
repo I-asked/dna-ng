@@ -206,7 +206,7 @@ static char* tableDefs[] = {
 	// 0x1C
 	"ssxs8iS*\x1ai",
 	// 0x1D
-	"^i\x04i",
+	"^*\x04i",
 	// 0x1E
 	NULL,
 	// 0x1F
@@ -601,6 +601,7 @@ void MetaData_GetConstant(tMetaData *pThis, IDX_TABLE idx, PTR pResultMem) {
 
 	switch (pConst->type) {
 	case ELEMENT_TYPE_I4:
+	case ELEMENT_TYPE_U4:
 		//*(U32*)pReturnMem = MetaData_DecodeSigEntry(
 		memcpy(pResultMem, pConst->value+1, 4);
 		return;

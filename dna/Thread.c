@@ -248,7 +248,7 @@ I32 Thread_Execute() {
 						thisOfs = 0;
 					} else {
 						pThis = *(PTR*)pMethodState->pParamsLocals;
-						thisOfs = 4;
+						thisOfs = sizeof(VADDR);
 					}
 					unblocked = pAsync->checkFn(pThis, pMethodState->pParamsLocals + thisOfs, pMethodState->pEvalStack, pAsync);
 					if (unblocked) {

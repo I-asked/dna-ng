@@ -102,7 +102,7 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if (CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
-  target_compile_options(${PROJECT_NAME} PRIVATE -funsigned-char -Wno-int-to-pointer-cast)
+  target_compile_options(${PROJECT_NAME} PRIVATE -funsigned-char)
 endif()
 if (UNIX)
   target_link_libraries(${PROJECT_NAME} PUBLIC dl m)

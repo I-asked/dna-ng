@@ -73,9 +73,9 @@ tAsyncCall* System_String_ctor_CharAIntInt(PTR pThis_, PTR pParams, PTR pReturnV
 	PTR charElements;
 	U32 startIndex, length;
 
-	charArray = ((HEAP_PTR*)pParams)[0];
-	startIndex = ((U32*)pParams)[1];
-	length = ((U32*)pParams)[2];
+	charArray = *(HEAP_PTR*)(pParams);
+	startIndex = *(U32*)(pParams+sizeof(VADDR));
+	length = *(U32*)(pParams+sizeof(VADDR)+4);
 
 	charElements = SystemArray_GetElements(charArray);
 	pSystemString = CreateStringHeapObj(length);

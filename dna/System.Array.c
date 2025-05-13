@@ -152,8 +152,8 @@ tAsyncCall* System_Array_Internal_Copy(PTR pThis_, PTR pParams, PTR pReturnValue
 	tSystemArray *pSrc, *pDst;
 	tMD_TypeDef *pSrcType, *pDstType, *pSrcElementType;
 
-	pSrc = ((tSystemArray**)pParams)[0];
-	pDst = ((tSystemArray**)pParams)[2];
+	pSrc = *(tSystemArray**)(pParams);
+	pDst = *(tSystemArray**)(pParams + sizeof(VADDR) + 4);
 	
 	// Check if we can do a fast-copy with these two arrays
 	pSrcType = Heap_GetType((HEAP_PTR)pSrc);
@@ -163,15 +163,15 @@ tAsyncCall* System_Array_Internal_Copy(PTR pThis_, PTR pParams, PTR pReturnValue
 		// Can do fast-copy
 		U32 srcIndex, dstIndex, length, elementSize;
 
-		srcIndex = ((U32*)pParams)[1];
-		dstIndex = ((U32*)pParams)[3];
-		length = ((U32*)pParams)[4];
+		srcIndex = *(U32*)(pParams + sizeof(VADDR));
+		dstIndex = *(U32*)(pParams + sizeof(VADDR)*2 + 4);
+		length = *(U32*)(pParams + sizeof(VADDR)*2 + 4*2);
 
-#if defined(_WIN32) && defined(_DEBUG)
+#if defined(_DEBUG)
 		// Do bounds check
 		if (srcIndex + length > pSrc->length || dstIndex + length > pDst->length) {
 			printf("[Array] Internal_Copy() Bounds check failed\n");
-			__debugbreak();
+      abort();
 		}
 #endif
 

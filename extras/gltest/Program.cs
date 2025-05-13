@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using SDL2;
 using static SDL2.Methods;
 
@@ -15,9 +16,16 @@ class Program {
       bool shouldQuit = false;
       while (!shouldQuit) {
         unsafe { SDL_WaitEvent(&evt); }
+
         switch ((SDL_EventType)evt.type) {
         case SDL_EventType.SDL_QUIT:
           shouldQuit = true;
+          break;
+        case SDL_EventType.SDL_KEYDOWN:
+          Console.WriteLine(((SDL_KeyboardEvent *)&evt)->keysym.scancode);
+          if (((SDL_KeyboardEvent *)&evt)->keysym.scancode == SDL_Scancode.SDL_SCANCODE_ESCAPE) {
+            shouldQuit = true;
+          }
           break;
         } 
       }
