@@ -196,7 +196,7 @@ U32 opcodeNumUses[JIT_OPCODE_MAXNUM];
 #endif
 
 //#undef  OPCODE_USE
-//#define OPCODE_USE(op) printf("use: %s\n", #op);
+//#define OPCODE_USE(op) printf("eval op at %p: %s\n", pCurOp, #op); raise(SIGTRAP);
 
 #define CHECK_FOR_BREAKPOINT() \
 	CheckIfCurrentInstructionHasBreakpoint(pCurrentMethodState, pCurOp - pOps, pOpSequencePoints);

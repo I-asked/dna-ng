@@ -85,6 +85,7 @@ SDL2.cs: $(INCLUDES_SDL2)
 		-e '/NativeType\w*("#define/d' \
 		-e 's/\(^\s*\)\?\[\(\w*:\s*\)\?NativeType\w*("[^"]*")\]\s*//g' \
 		-e 's/SDL_SCANCODE\w*\s*|/(uint)&/g' \
+		-e 's/sbyte\s*\*/string/g' \
 		-e '/= ;$$/d' $@ \
 		-e '/const U*IntPtr/d' \
 		-e '/(nu*int)/d' \

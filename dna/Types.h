@@ -52,7 +52,7 @@ typedef int I32;
 typedef unsigned int U32;
 typedef short I16;
 typedef unsigned short U16;
-typedef char I8;
+typedef signed char I8;
 typedef unsigned char U8;
 
 typedef union uConvDouble_ uConvDouble;

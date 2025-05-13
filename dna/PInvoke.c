@@ -138,12 +138,12 @@ static void* ConvertStringToUnicode(HEAP_PTR pHeapEntry) {
 
 #include "PInvoke_TypeDef.h"
 
-typedef U64    (STDCALL *_uCuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4);
-typedef U64    (STDCALL *_uCuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, U32 _5);
-typedef U64    (STDCALL *_uCuuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, U32 _5, U32 _6);
-typedef U64    (STDCALL *_uCuuuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, U32 _5, U32 _6, U32 _7);
-typedef U64    (STDCALL *_uCuuuuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, U32 _5, U32 _6, U32 _7, U32 _8);
-typedef U64    (STDCALL *_uCuuuuuuuuuu)(U32 _0, U32 _1, U32 _2, U32 _3, U32 _4, U32 _5, U32 _6, U32 _7, U32 _8, U32 _9);
+typedef U64    (STDCALL *_uCuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4);
+typedef U64    (STDCALL *_uCuuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4, VADDR _5);
+typedef U64    (STDCALL *_uCuuuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4, VADDR _5, VADDR _6);
+typedef U64    (STDCALL *_uCuuuuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4, VADDR _5, VADDR _6, VADDR _7);
+typedef U64    (STDCALL *_uCuuuuuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4, VADDR _5, VADDR _6, VADDR _7, VADDR _8);
+typedef U64    (STDCALL *_uCuuuuuuuuuu)(VADDR _0, VADDR _1, VADDR _2, VADDR _3, VADDR _4, VADDR _5, VADDR _6, VADDR _7, VADDR _8, VADDR _9);
 
 #define CALL0(returnType) (returnType)
 #define CALL1(returnType, t0) ((returnType) | ((t0)<<2))

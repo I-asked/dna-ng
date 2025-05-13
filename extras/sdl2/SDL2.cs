@@ -43,7 +43,7 @@ namespace SDL2
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate int SDL_main_func(int argc, sbyte** argv);
+    public unsafe delegate int SDL_main_func(int argc, string* argv);
 
 
     public enum SDL_AssertState : uint
@@ -63,15 +63,15 @@ namespace SDL2
         public uint trigger_count;
 
 
-        public sbyte* condition;
+        public string condition;
 
 
-        public sbyte* filename;
+        public string filename;
 
         public int linenum;
 
 
-        public sbyte* function;
+        public string function;
 
 
         public SDL_AssertData* next;
@@ -1436,7 +1436,7 @@ namespace SDL2
         public uint axis_mask;
 
 
-        public sbyte* name;
+        public string name;
 
         public void* userdata;
 
@@ -1787,7 +1787,7 @@ namespace SDL2
         public uint windowID;
 
 
-        public sbyte* text;
+        public string text;
 
 
         public int start;
@@ -2264,7 +2264,7 @@ namespace SDL2
         public uint timestamp;
 
 
-        public sbyte* file;
+        public string file;
 
 
         public uint windowID;
@@ -2706,7 +2706,7 @@ namespace SDL2
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate void SDL_HintCallback(void* userdata, sbyte* name, sbyte* oldValue, sbyte* newValue);
+    public unsafe delegate void SDL_HintCallback(void* userdata, string name, string oldValue, string newValue);
 
 
     public enum SDL_LogCategory : uint
@@ -2746,7 +2746,7 @@ namespace SDL2
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate void SDL_LogOutputFunction(void* userdata, int category, SDL_LogPriority priority, sbyte* message);
+    public unsafe delegate void SDL_LogOutputFunction(void* userdata, int category, SDL_LogPriority priority, string message);
 
 
     public enum SDL_MessageBoxFlags : uint
@@ -2773,7 +2773,7 @@ namespace SDL2
         public int buttonid;
 
 
-        public sbyte* text;
+        public string text;
     }
 
     public partial struct SDL_MessageBoxColor
@@ -2833,10 +2833,10 @@ namespace SDL2
         public SDL_Window* window;
 
 
-        public sbyte* title;
+        public string title;
 
 
-        public sbyte* message;
+        public string message;
 
         public int numbuttons;
 
@@ -2869,7 +2869,7 @@ namespace SDL2
     public unsafe partial struct SDL_RendererInfo
     {
 
-        public sbyte* name;
+        public string name;
 
 
         public uint flags;
@@ -2981,7 +2981,7 @@ namespace SDL2
     {
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetPlatform();
+        public static extern string SDL_GetPlatform();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void* SDL_malloc(UIntPtr size);
@@ -3009,10 +3009,10 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_getenv(sbyte* name);
+        public static extern string SDL_getenv(string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_setenv(sbyte* name, sbyte* value, int overwrite);
+        public static extern int SDL_setenv(string name, string value, int overwrite);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_qsort(void* @base, UIntPtr nmemb, UIntPtr size, IntPtr compare);
@@ -3119,133 +3119,133 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_strlen(sbyte* str);
+        public static extern UIntPtr SDL_strlen(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_strlcpy(sbyte* dst, sbyte* src, UIntPtr maxlen);
+        public static extern UIntPtr SDL_strlcpy(string dst, string src, UIntPtr maxlen);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_utf8strlcpy(sbyte* dst, sbyte* src, UIntPtr dst_bytes);
+        public static extern UIntPtr SDL_utf8strlcpy(string dst, string src, UIntPtr dst_bytes);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_strlcat(sbyte* dst, sbyte* src, UIntPtr maxlen);
+        public static extern UIntPtr SDL_strlcat(string dst, string src, UIntPtr maxlen);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strdup(sbyte* str);
+        public static extern string SDL_strdup(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strrev(sbyte* str);
+        public static extern string SDL_strrev(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strupr(sbyte* str);
+        public static extern string SDL_strupr(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strlwr(sbyte* str);
+        public static extern string SDL_strlwr(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strchr(sbyte* str, int c);
+        public static extern string SDL_strchr(string str, int c);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strrchr(sbyte* str, int c);
+        public static extern string SDL_strrchr(string str, int c);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strstr(sbyte* haystack, sbyte* needle);
+        public static extern string SDL_strstr(string haystack, string needle);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strcasestr(sbyte* haystack, sbyte* needle);
+        public static extern string SDL_strcasestr(string haystack, string needle);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_strtokr(sbyte* s1, sbyte* s2, sbyte** saveptr);
+        public static extern string SDL_strtokr(string s1, string s2, string* saveptr);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_utf8strlen(sbyte* str);
+        public static extern UIntPtr SDL_utf8strlen(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_utf8strnlen(sbyte* str, UIntPtr bytes);
+        public static extern UIntPtr SDL_utf8strnlen(string str, UIntPtr bytes);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_itoa(int value, sbyte* str, int radix);
+        public static extern string SDL_itoa(int value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_uitoa(uint value, sbyte* str, int radix);
+        public static extern string SDL_uitoa(uint value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_ltoa(IntPtr value, sbyte* str, int radix);
+        public static extern string SDL_ltoa(IntPtr value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_ultoa(UIntPtr value, sbyte* str, int radix);
+        public static extern string SDL_ultoa(UIntPtr value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_lltoa(IntPtr value, sbyte* str, int radix);
+        public static extern string SDL_lltoa(IntPtr value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_ulltoa(UIntPtr value, sbyte* str, int radix);
+        public static extern string SDL_ulltoa(UIntPtr value, string str, int radix);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_atoi(sbyte* str);
+        public static extern int SDL_atoi(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern double SDL_atof(sbyte* str);
-
-        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-
-        public static extern IntPtr SDL_strtol(sbyte* str, sbyte** endp, int @base);
+        public static extern double SDL_atof(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_strtoul(sbyte* str, sbyte** endp, int @base);
+        public static extern IntPtr SDL_strtol(string str, string* endp, int @base);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern IntPtr SDL_strtoll(sbyte* str, sbyte** endp, int @base);
+        public static extern UIntPtr SDL_strtoul(string str, string* endp, int @base);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_strtoull(sbyte* str, sbyte** endp, int @base);
+        public static extern IntPtr SDL_strtoll(string str, string* endp, int @base);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern double SDL_strtod(sbyte* str, sbyte** endp);
+
+        public static extern UIntPtr SDL_strtoull(string str, string* endp, int @base);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_strcmp(sbyte* str1, sbyte* str2);
+        public static extern double SDL_strtod(string str, string* endp);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_strncmp(sbyte* str1, sbyte* str2, UIntPtr maxlen);
+        public static extern int SDL_strcmp(string str1, string str2);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_strcasecmp(sbyte* str1, sbyte* str2);
+        public static extern int SDL_strncmp(string str1, string str2, UIntPtr maxlen);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_strncasecmp(sbyte* str1, sbyte* str2, UIntPtr len);
+        public static extern int SDL_strcasecmp(string str1, string str2);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_sscanf(sbyte* text, sbyte* fmt, __arglist);
+        public static extern int SDL_strncasecmp(string str1, string str2, UIntPtr len);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_snprintf(sbyte* text, UIntPtr maxlen, sbyte* fmt, __arglist);
+        public static extern int SDL_sscanf(string text, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_asprintf(sbyte** strp, sbyte* fmt, __arglist);
+        public static extern int SDL_snprintf(string text, UIntPtr maxlen, string fmt, __arglist);
+
+        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int SDL_asprintf(string* strp, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern double SDL_acos(double x);
@@ -3377,27 +3377,27 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern _SDL_iconv_t* SDL_iconv_open(sbyte* tocode, sbyte* fromcode);
+        public static extern _SDL_iconv_t* SDL_iconv_open(string tocode, string fromcode);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_iconv_close(_SDL_iconv_t* cd);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern UIntPtr SDL_iconv(_SDL_iconv_t* cd, sbyte** inbuf, UIntPtr* inbytesleft, sbyte** outbuf, UIntPtr* outbytesleft);
+        public static extern UIntPtr SDL_iconv(_SDL_iconv_t* cd, string* inbuf, UIntPtr* inbytesleft, string* outbuf, UIntPtr* outbytesleft);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_iconv_string(sbyte* tocode, sbyte* fromcode, sbyte* inbuf, UIntPtr inbytesleft);
+        public static extern string SDL_iconv_string(string tocode, string fromcode, string inbuf, UIntPtr inbytesleft);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_main(int argc, sbyte** argv);
+        public static extern int SDL_main(int argc, string* argv);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_SetMainReady();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_AssertState SDL_ReportAssertion(SDL_AssertData* param0, sbyte* param1, sbyte* param2, int param3);
+        public static extern SDL_AssertState SDL_ReportAssertion(SDL_AssertData* param0, string param1, string param2, int param3);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_SetAssertionHandler(IntPtr handler, void* userdata);
@@ -3418,15 +3418,15 @@ namespace SDL2
         public static extern void SDL_ResetAssertionReport();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_SetError(sbyte* fmt, __arglist);
+        public static extern int SDL_SetError(string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetError();
+        public static extern string SDL_GetError();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetErrorMsg(sbyte* errstr, int maxlen);
+        public static extern string SDL_GetErrorMsg(string errstr, int maxlen);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_ClearError();
@@ -3491,14 +3491,14 @@ namespace SDL2
         public static extern int SDL_CondWaitTimeout(SDL_cond* cond, SDL_mutex* mutex, uint ms);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_Thread* SDL_CreateThread(IntPtr fn, sbyte* name, void* data);
+        public static extern SDL_Thread* SDL_CreateThread(IntPtr fn, string name, void* data);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_Thread* SDL_CreateThreadWithStackSize(IntPtr fn, sbyte* name, UIntPtr stacksize, void* data);
+        public static extern SDL_Thread* SDL_CreateThreadWithStackSize(IntPtr fn, string name, UIntPtr stacksize, void* data);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetThreadName(SDL_Thread* thread);
+        public static extern string SDL_GetThreadName(SDL_Thread* thread);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
@@ -3531,7 +3531,7 @@ namespace SDL2
         public static extern void SDL_TLSCleanup();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_RWops* SDL_RWFromFile(sbyte* file, sbyte* mode);
+        public static extern SDL_RWops* SDL_RWFromFile(string file, string mode);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_RWops* SDL_RWFromFP(void* fp, SDL_bool autoclose);
@@ -3575,7 +3575,7 @@ namespace SDL2
         public static extern void* SDL_LoadFile_RW(SDL_RWops* src, UIntPtr* datasize, int freesrc);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_LoadFile(sbyte* file, UIntPtr* datasize);
+        public static extern void* SDL_LoadFile(string file, UIntPtr* datasize);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
@@ -3638,17 +3638,17 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetAudioDriver(int index);
+        public static extern string SDL_GetAudioDriver(int index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_AudioInit(sbyte* driver_name);
+        public static extern int SDL_AudioInit(string driver_name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_AudioQuit();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetCurrentAudioDriver();
+        public static extern string SDL_GetCurrentAudioDriver();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_OpenAudio(SDL_AudioSpec* desired, SDL_AudioSpec* obtained);
@@ -3658,17 +3658,17 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetAudioDeviceName(int index, int iscapture);
+        public static extern string SDL_GetAudioDeviceName(int index, int iscapture);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_GetAudioDeviceSpec(int index, int iscapture, SDL_AudioSpec* spec);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_GetDefaultAudioInfo(sbyte** name, SDL_AudioSpec* spec, int iscapture);
+        public static extern int SDL_GetDefaultAudioInfo(string* name, SDL_AudioSpec* spec, int iscapture);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern uint SDL_OpenAudioDevice(sbyte* device, int iscapture, SDL_AudioSpec* desired, SDL_AudioSpec* obtained, int allowed_changes);
+        public static extern uint SDL_OpenAudioDevice(string device, int iscapture, SDL_AudioSpec* desired, SDL_AudioSpec* obtained, int allowed_changes);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_AudioStatus SDL_GetAudioStatus();
@@ -3755,21 +3755,21 @@ namespace SDL2
         public static extern void SDL_CloseAudioDevice(uint dev);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_SetClipboardText(sbyte* text);
+        public static extern int SDL_SetClipboardText(string text);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetClipboardText();
+        public static extern string SDL_GetClipboardText();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_bool SDL_HasClipboardText();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_SetPrimarySelectionText(sbyte* text);
+        public static extern int SDL_SetPrimarySelectionText(string text);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetPrimarySelectionText();
+        public static extern string SDL_GetPrimarySelectionText();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_bool SDL_HasPrimarySelectionText();
@@ -3846,7 +3846,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetPixelFormatName(uint format);
+        public static extern string SDL_GetPixelFormatName(uint format);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_bool SDL_PixelFormatEnumToMasks(uint format, int* bpp, uint* Rmask, uint* Gmask, uint* Bmask, uint* Amask);
@@ -4065,24 +4065,24 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetVideoDriver(int index);
+        public static extern string SDL_GetVideoDriver(int index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_VideoInit(sbyte* driver_name);
+        public static extern int SDL_VideoInit(string driver_name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_VideoQuit();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetCurrentVideoDriver();
+        public static extern string SDL_GetCurrentVideoDriver();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_GetNumVideoDisplays();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetDisplayName(int displayIndex);
+        public static extern string SDL_GetDisplayName(int displayIndex);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_GetDisplayBounds(int displayIndex, SDL_Rect* rect);
@@ -4134,7 +4134,7 @@ namespace SDL2
         public static extern uint SDL_GetWindowPixelFormat(SDL_Window* window);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_Window* SDL_CreateWindow(sbyte* title, int x, int y, int w, int h, uint flags);
+        public static extern SDL_Window* SDL_CreateWindow(string title, int x, int y, int w, int h, uint flags);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_Window* SDL_CreateWindowFrom(void* data);
@@ -4151,20 +4151,20 @@ namespace SDL2
         public static extern uint SDL_GetWindowFlags(SDL_Window* window);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_SetWindowTitle(SDL_Window* window, sbyte* title);
+        public static extern void SDL_SetWindowTitle(SDL_Window* window, string title);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetWindowTitle(SDL_Window* window);
+        public static extern string SDL_GetWindowTitle(SDL_Window* window);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_SetWindowIcon(SDL_Window* window, SDL_Surface* icon);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_SetWindowData(SDL_Window* window, sbyte* name, void* userdata);
+        public static extern void* SDL_SetWindowData(SDL_Window* window, string name, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_GetWindowData(SDL_Window* window, sbyte* name);
+        public static extern void* SDL_GetWindowData(SDL_Window* window, string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_SetWindowPosition(SDL_Window* window, int x, int y);
@@ -4312,16 +4312,16 @@ namespace SDL2
         public static extern void SDL_DisableScreenSaver();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_GL_LoadLibrary(sbyte* path);
+        public static extern int SDL_GL_LoadLibrary(string path);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_GL_GetProcAddress(sbyte* proc);
+        public static extern void* SDL_GL_GetProcAddress(string proc);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_GL_UnloadLibrary();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_bool SDL_GL_ExtensionSupported(sbyte* extension);
+        public static extern SDL_bool SDL_GL_ExtensionSupported(string extension);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_GL_ResetAttributes();
@@ -4386,18 +4386,18 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetScancodeName(SDL_Scancode scancode);
+        public static extern string SDL_GetScancodeName(SDL_Scancode scancode);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_Scancode SDL_GetScancodeFromName(sbyte* name);
-
-        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-
-        public static extern sbyte* SDL_GetKeyName(int key);
+        public static extern SDL_Scancode SDL_GetScancodeFromName(string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern int SDL_GetKeyFromName(sbyte* name);
+        public static extern string SDL_GetKeyName(int key);
+
+        [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+
+        public static extern int SDL_GetKeyFromName(string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_StartTextInput();
@@ -4478,10 +4478,10 @@ namespace SDL2
         public static extern int SDL_ShowCursor(int toggle);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_GUIDToString(SDL_GUID guid, sbyte* pszGUID, int cbGUID);
+        public static extern void SDL_GUIDToString(SDL_GUID guid, string pszGUID, int cbGUID);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_GUID SDL_GUIDFromString(sbyte* pchGUID);
+        public static extern SDL_GUID SDL_GUIDFromString(string pchGUID);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_LockJoysticks();
@@ -4494,11 +4494,11 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_JoystickNameForIndex(int device_index);
+        public static extern string SDL_JoystickNameForIndex(int device_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_JoystickPathForIndex(int device_index);
+        public static extern string SDL_JoystickPathForIndex(int device_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_JoystickGetDevicePlayerIndex(int device_index);
@@ -4561,11 +4561,11 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_JoystickName(_SDL_Joystick* joystick);
+        public static extern string SDL_JoystickName(_SDL_Joystick* joystick);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_JoystickPath(_SDL_Joystick* joystick);
+        public static extern string SDL_JoystickPath(_SDL_Joystick* joystick);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_JoystickGetPlayerIndex(_SDL_Joystick* joystick);
@@ -4595,17 +4595,17 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_JoystickGetSerial(_SDL_Joystick* joystick);
+        public static extern string SDL_JoystickGetSerial(_SDL_Joystick* joystick);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_JoystickType SDL_JoystickGetType(_SDL_Joystick* joystick);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_JoystickGetGUIDString(SDL_GUID guid, sbyte* pszGUID, int cbGUID);
+        public static extern void SDL_JoystickGetGUIDString(SDL_GUID guid, string pszGUID, int cbGUID);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern SDL_GUID SDL_JoystickGetGUIDFromString(sbyte* pchGUID);
+        public static extern SDL_GUID SDL_JoystickGetGUIDFromString(string pchGUID);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_GetJoystickGUIDInfo(SDL_GUID guid, ushort* vendor, ushort* product, ushort* version, ushort* crc16);
@@ -4691,7 +4691,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_SensorGetDeviceName(int device_index);
+        public static extern string SDL_SensorGetDeviceName(int device_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_SensorType SDL_SensorGetDeviceType(int device_index);
@@ -4713,7 +4713,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_SensorGetName(_SDL_Sensor* sensor);
+        public static extern string SDL_SensorGetName(_SDL_Sensor* sensor);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_SensorType SDL_SensorGetType(_SDL_Sensor* sensor);
@@ -4741,40 +4741,40 @@ namespace SDL2
         public static extern int SDL_GameControllerAddMappingsFromRW(SDL_RWops* rw, int freerw);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_GameControllerAddMapping(sbyte* mappingString);
+        public static extern int SDL_GameControllerAddMapping(string mappingString);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_GameControllerNumMappings();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerMappingForIndex(int mapping_index);
+        public static extern string SDL_GameControllerMappingForIndex(int mapping_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerMappingForGUID(SDL_GUID guid);
+        public static extern string SDL_GameControllerMappingForGUID(SDL_GUID guid);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerMapping(_SDL_GameController* gamecontroller);
+        public static extern string SDL_GameControllerMapping(_SDL_GameController* gamecontroller);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_bool SDL_IsGameController(int joystick_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerNameForIndex(int joystick_index);
+        public static extern string SDL_GameControllerNameForIndex(int joystick_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerPathForIndex(int joystick_index);
+        public static extern string SDL_GameControllerPathForIndex(int joystick_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_GameControllerType SDL_GameControllerTypeForIndex(int joystick_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerMappingForDeviceIndex(int joystick_index);
+        public static extern string SDL_GameControllerMappingForDeviceIndex(int joystick_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
@@ -4790,11 +4790,11 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerName(_SDL_GameController* gamecontroller);
+        public static extern string SDL_GameControllerName(_SDL_GameController* gamecontroller);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerPath(_SDL_GameController* gamecontroller);
+        public static extern string SDL_GameControllerPath(_SDL_GameController* gamecontroller);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_GameControllerType SDL_GameControllerGetType(_SDL_GameController* gamecontroller);
@@ -4823,7 +4823,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerGetSerial(_SDL_GameController* gamecontroller);
+        public static extern string SDL_GameControllerGetSerial(_SDL_GameController* gamecontroller);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
@@ -4843,11 +4843,11 @@ namespace SDL2
         public static extern void SDL_GameControllerUpdate();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_GameControllerAxis SDL_GameControllerGetAxisFromString(sbyte* str);
+        public static extern SDL_GameControllerAxis SDL_GameControllerGetAxisFromString(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerGetStringForAxis(SDL_GameControllerAxis axis);
+        public static extern string SDL_GameControllerGetStringForAxis(SDL_GameControllerAxis axis);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_GameControllerButtonBind SDL_GameControllerGetBindForAxis(_SDL_GameController* gamecontroller, SDL_GameControllerAxis axis);
@@ -4860,11 +4860,11 @@ namespace SDL2
         public static extern short SDL_GameControllerGetAxis(_SDL_GameController* gamecontroller, SDL_GameControllerAxis axis);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_GameControllerButton SDL_GameControllerGetButtonFromString(sbyte* str);
+        public static extern SDL_GameControllerButton SDL_GameControllerGetButtonFromString(string str);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerGetStringForButton(SDL_GameControllerButton button);
+        public static extern string SDL_GameControllerGetStringForButton(SDL_GameControllerButton button);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_GameControllerButtonBind SDL_GameControllerGetBindForButton(_SDL_GameController* gamecontroller, SDL_GameControllerButton button);
@@ -4929,11 +4929,11 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerGetAppleSFSymbolsNameForButton(_SDL_GameController* gamecontroller, SDL_GameControllerButton button);
+        public static extern string SDL_GameControllerGetAppleSFSymbolsNameForButton(_SDL_GameController* gamecontroller, SDL_GameControllerButton button);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GameControllerGetAppleSFSymbolsNameForAxis(_SDL_GameController* gamecontroller, SDL_GameControllerAxis axis);
+        public static extern string SDL_GameControllerGetAppleSFSymbolsNameForAxis(_SDL_GameController* gamecontroller, SDL_GameControllerAxis axis);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int SDL_GetNumTouchDevices();
@@ -4944,7 +4944,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetTouchName(int index);
+        public static extern string SDL_GetTouchName(int index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_TouchDeviceType SDL_GetTouchDeviceType(IntPtr touchID);
@@ -5025,7 +5025,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_HapticName(int device_index);
+        public static extern string SDL_HapticName(int device_index);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
@@ -5116,38 +5116,38 @@ namespace SDL2
         public static extern int SDL_HapticRumbleStop(_SDL_Haptic* haptic);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_bool SDL_SetHintWithPriority(sbyte* name, sbyte* value, SDL_HintPriority priority);
+        public static extern SDL_bool SDL_SetHintWithPriority(string name, string value, SDL_HintPriority priority);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_bool SDL_SetHint(sbyte* name, sbyte* value);
+        public static extern SDL_bool SDL_SetHint(string name, string value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_bool SDL_ResetHint(sbyte* name);
+        public static extern SDL_bool SDL_ResetHint(string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_ResetHints();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetHint(sbyte* name);
+        public static extern string SDL_GetHint(string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_bool SDL_GetHintBoolean(sbyte* name, SDL_bool default_value);
+        public static extern SDL_bool SDL_GetHintBoolean(string name, SDL_bool default_value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_AddHintCallback(sbyte* name, IntPtr callback, void* userdata);
+        public static extern void SDL_AddHintCallback(string name, IntPtr callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_DelHintCallback(sbyte* name, IntPtr callback, void* userdata);
+        public static extern void SDL_DelHintCallback(string name, IntPtr callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_ClearHints();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_LoadObject(sbyte* sofile);
+        public static extern void* SDL_LoadObject(string sofile);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void* SDL_LoadFunction(void* handle, sbyte* name);
+        public static extern void* SDL_LoadFunction(void* handle, string name);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_UnloadObject(void* handle);
@@ -5165,28 +5165,28 @@ namespace SDL2
         public static extern void SDL_LogResetPriorities();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_Log(sbyte* fmt, __arglist);
+        public static extern void SDL_Log(string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogVerbose(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogVerbose(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogDebug(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogDebug(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogInfo(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogInfo(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogWarn(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogWarn(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogError(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogError(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogCritical(int category, sbyte* fmt, __arglist);
+        public static extern void SDL_LogCritical(int category, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void SDL_LogMessage(int category, SDL_LogPriority priority, sbyte* fmt, __arglist);
+        public static extern void SDL_LogMessage(int category, SDL_LogPriority priority, string fmt, __arglist);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void SDL_LogGetOutputFunction(IntPtr* callback, void** userdata);
@@ -5198,7 +5198,7 @@ namespace SDL2
         public static extern int SDL_ShowMessageBox(SDL_MessageBoxData* messageboxdata, int* buttonid);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int SDL_ShowSimpleMessageBox(uint flags, sbyte* title, sbyte* message, SDL_Window* window);
+        public static extern int SDL_ShowSimpleMessageBox(uint flags, string title, string message, SDL_Window* window);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_PowerState SDL_GetPowerInfo(int* seconds, int* percent);
@@ -5447,7 +5447,7 @@ namespace SDL2
         public static extern int SDL_RenderSetVSync(SDL_Renderer* renderer, int vsync);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern SDL_Window* SDL_CreateShapedWindow(sbyte* title, uint x, uint y, uint w, uint h, uint flags);
+        public static extern SDL_Window* SDL_CreateShapedWindow(string title, uint x, uint y, uint w, uint h, uint flags);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern SDL_bool SDL_IsShapedWindow(SDL_Window* window);
@@ -5516,7 +5516,7 @@ namespace SDL2
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* SDL_GetRevision();
+        public static extern string SDL_GetRevision();
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [Obsolete]

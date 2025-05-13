@@ -957,40 +957,28 @@ cilConv:
 					U32 opCodeBase;
 					U32 useParam = 0, param;
 					// This is the types that the conversion is from.
-					switch (pStackType->stackType) {
-					case EVALSTACK_INT64:
-						opCodeBase = (pStackType == types[TYPE_SYSTEM_INT64])?JIT_CONV_FROM_I64:JIT_CONV_FROM_U64;
-						break;
-					case EVALSTACK_INT32:
-						opCodeBase =
-							(pStackType == types[TYPE_SYSTEM_BYTE] ||
-							pStackType == types[TYPE_SYSTEM_UINT16] ||
-							pStackType == types[TYPE_SYSTEM_UINT32] ||
-							pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
-						break;
-					case EVALSTACK_PTR: // Only on 32-bit
-						opCodeBase =
-							(pStackType == types[TYPE_SYSTEM_BYTE] ||
-							pStackType == types[TYPE_SYSTEM_UINT16] ||
-							pStackType == types[TYPE_SYSTEM_UINT32] ||
-							pStackType == types[TYPE_SYSTEM_UINTPTR])?
-#if __SIZEOF_POINTER__ == 4
-							JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
-#else
-							JIT_CONV_FROM_U64:JIT_CONV_FROM_I64;
-#endif
-						break;
-					case EVALSTACK_F64:
-						opCodeBase = JIT_CONV_FROM_R64;
-						break;
-					case EVALSTACK_F32:
-						opCodeBase = JIT_CONV_FROM_R32;
-						break;
-					default:
-						Crash("JITit() Conv cannot handle stack type %d", pStackType->stackType);
-					}
-					// This is the types that the conversion is to.
 					if (pStackType->stackType != EVALSTACK_PTR) {
+            switch (pStackType->stackType) {
+            case EVALSTACK_INT64:
+              opCodeBase = (pStackType == types[TYPE_SYSTEM_INT64])?JIT_CONV_FROM_I64:JIT_CONV_FROM_U64;
+              break;
+            case EVALSTACK_INT32:
+              opCodeBase =
+                (pStackType == types[TYPE_SYSTEM_BYTE] ||
+                pStackType == types[TYPE_SYSTEM_UINT16] ||
+                pStackType == types[TYPE_SYSTEM_UINT32] ||
+                pStackType == types[TYPE_SYSTEM_UINTPTR])?JIT_CONV_FROM_U32:JIT_CONV_FROM_I32;
+              break;
+            case EVALSTACK_F64:
+              opCodeBase = JIT_CONV_FROM_R64;
+              break;
+            case EVALSTACK_F32:
+              opCodeBase = JIT_CONV_FROM_R32;
+              break;
+            default:
+              Crash("JITit() Conv cannot handle stack type %d", pStackType->stackType);
+            }
+            // This is the types that the conversion is to.
             switch (convOpOffset) {
             case JIT_CONV_OFFSET_I32:
               useParam = 1;
@@ -1010,11 +998,11 @@ cilConv:
             default:
               Crash("JITit() Conv cannot handle convOpOffset %d", convOpOffset);
             }
+            PushOp(opCodeBase + convOpOffset);
+            if (useParam) {
+              PushU32(param);
+            }
           }
-					PushOp(opCodeBase + convOpOffset);
-					if (useParam) {
-						PushU32(param);
-					}
 				}
 				PushStackType(types[toType]);
 				break;
