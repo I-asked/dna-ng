@@ -660,6 +660,7 @@ cilCallVirtConstrained:
 						pStackType = types[TYPE_SYSTEM_OBJECT];
 					}
 					MetaData_Fill_TypeDef(pStackType, NULL, NULL);
+          dynamicallyBoxReturnValue = 0;
 					if (TYPE_ISINTERFACE(pCallMethod->pParentType) && op == CIL_CALLVIRT) {
 						PushOp(JIT_CALL_INTERFACE);
 					} else if (pCallMethod->pParentType->pParent == types[TYPE_SYSTEM_MULTICASTDELEGATE]) {
