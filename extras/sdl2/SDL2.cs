@@ -6016,9 +6016,9 @@ namespace SDL2
 
         public const int SDL_MINOR_VERSION = 32;
 
-        public const int SDL_PATCHLEVEL = 54;
+        public const int SDL_PATCHLEVEL = 56;
 
-        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (32) * 100 + (54));
+        public const int SDL_COMPILEDVERSION = ((2) * 1000 + (32) * 100 + (56));
 
         public const uint SDL_INIT_TIMER = 0x00000001U;
 

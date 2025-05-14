@@ -28,7 +28,7 @@ CSPIGFLAGS += -x c -std c99 -c generate-macro-bindings -c compatible-codegen -D 
 all: $(TARGET) GL.cs
 
 GL.cs: $(INCLUDES_GL)
-	$(CSPIG) $(CSPIGFLAGS) $(addprefix -t ,$(INCLUDES_GL_ALL)) $(addprefix -f ,$^) -o $@ -l GL -n GL $(INCFLAGS) ||:
+	$(CSPIG) $(CSPIGFLAGS) $(addprefix -t ,$(INCLUDES_GL_ALL)) $(addprefix -f ,$^) -o $@ -l RlGl -n GL $(INCFLAGS) ||:
 	$(SED) -i \
 		-e '/NativeType\w*("#define/d' \
 		-e 's/\(^\s*\)\?\[\(\w*:\s*\)\?NativeType\w*("[^"]*")\]\s*//g' \

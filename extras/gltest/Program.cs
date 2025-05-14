@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Runtime.InteropServices;
 using SDL2;
 using static SDL2.Methods;
 using RlGl;
@@ -33,6 +34,12 @@ class Program {
 
       rlClearColor(255, 0, 0, 255);
 
+      rlMatrixMode(RL_MODELVIEW);
+      rlLoadIdentity();
+
+      rlMatrixMode(RL_PROJECTION);
+      rlLoadIdentity();
+
       bool shouldQuit = false;
       while (!shouldQuit) {
         unsafe { SDL_WaitEvent(&evt); }
@@ -49,6 +56,8 @@ class Program {
         } 
 
         rlClearScreenBuffers();
+
+        rlColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         SDL_GL_SwapWindow(win);
       }
