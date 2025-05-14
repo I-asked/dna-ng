@@ -1,0 +1,48 @@
+VPATH := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+
+INCFLAGS := $(addprefix -I,$(shell $(CC) -xc /dev/null -E -Wp,-v 2>&1 |sed -n 's,^ ,,p'))
+
+INCLUDES_GL := \
+								 gl.h
+
+INCLUDES_GL_ALL := \
+										 gl.h
+
+CSPIG ?= $(shell command -v ClangSharpPInvokeGenerator)
+ifeq ($(CSPIG),)
+$(error ClangSharpPInvokeGenerator missing)
+endif
+
+SED ?= $(shell command -v sed)
+ifeq ($(SED),)
+$(error sed missing)
+endif
+
+CFLAGS += -fPIC -fvisibility=hidden
+
+CFLAGS += -DBUILD_LIBTYPE_SHARED
+
+CSPIGFLAGS += -x c -std c99 -c generate-macro-bindings -c compatible-codegen -D CS_CODEGEN
+
+.PHONY: all
+all: $(TARGET) GL.cs
+
+GL.cs: $(INCLUDES_GL)
+	$(CSPIG) $(CSPIGFLAGS) $(addprefix -t ,$(INCLUDES_GL_ALL)) $(addprefix -f ,$^) -o $@ -l GL -n GL $(INCFLAGS) ||:
+	$(SED) -i \
+		-e '/NativeType\w*("#define/d' \
+		-e 's/\(^\s*\)\?\[\(\w*:\s*\)\?NativeType\w*("[^"]*")\]\s*//g' \
+		-e 's/sbyte\s*\*/string/g' \
+		-e '/= ;$$/d' $@ \
+		-e '/const U*IntPtr/d' \
+		-e '/(nu*int)/d' \
+		-e '/ReadOnlySpan</d'
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $(CFLAGS) -shared -o $@ $^ $(LDLIBS)
+
+.PHONY: clean distclean
+clean:
+
+distclean: clean
+	$(RM) GL.cs

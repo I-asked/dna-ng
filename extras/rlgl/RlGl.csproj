@@ -6,12 +6,20 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <Target Name="librlgl" BeforeTargets="BeforeCompile">
-    <Exec Command="make -f $(ProjectDir)/Makefile distclean all clean"/>
+  <Target Name="libRlGl" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile.RlGl distclean all clean"/>
   </Target>
 
-  <Target Name="Clean librlgl" BeforeTargets="CoreClean">
-    <Exec Command="make -f $(ProjectDir)/Makefile distclean"/>
+  <Target Name="Clean libRlGl" BeforeTargets="CoreClean">
+    <Exec Command="make -f $(ProjectDir)/Makefile.RlGl distclean"/>
+  </Target>
+
+  <Target Name="libGL" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile.GL distclean all clean"/>
+  </Target>
+
+  <Target Name="Clean libGL" BeforeTargets="CoreClean">
+    <Exec Command="make -f $(ProjectDir)/Makefile.GL distclean"/>
   </Target>
 
 </Project>

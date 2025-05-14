@@ -51,6 +51,7 @@ static tLoadedLib* GetLib(STRING name) {
 		if (strcmp(name, pLib->name) == 0) {
 			return pLib;
 		}
+		pLib = pLib->pNext;
 	}
 	//sprintf(libName, "%s%s", LIB_PREFIX, name);
 	strcpy(libName, name);

@@ -1,4 +1,6 @@
+using System;
 using System.Runtime.InteropServices;
+using static RlGl.rlShaderLocationIndex;
 
 namespace RlGl
 {
@@ -259,491 +261,663 @@ namespace RlGl
 
     public static unsafe partial class Methods
     {
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlMatrixMode(int mode);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlPushMatrix();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlPopMatrix();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlLoadIdentity();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlTranslatef(float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlRotatef(float angle, float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlScalef(float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlMultMatrixf(float* matf);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlFrustum(double left, double right, double bottom, double top, double znear, double zfar);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlOrtho(double left, double right, double bottom, double top, double znear, double zfar);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlViewport(int x, int y, int width, int height);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetClipPlanes(double nearPlane, double farPlane);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern double rlGetCullDistanceNear();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern double rlGetCullDistanceFar();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlBegin(int mode);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnd();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlVertex2i(int x, int y);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlVertex2f(float x, float y);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlVertex3f(float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlTexCoord2f(float x, float y);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlNormal3f(float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlColor4ub(byte r, byte g, byte b, byte a);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlColor3f(float x, float y, float z);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlColor4f(float x, float y, float z, float w);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern byte rlEnableVertexArray(uint vaoId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableVertexArray();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableVertexBuffer(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableVertexBuffer();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableVertexBufferElement(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableVertexBufferElement();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableVertexAttribute(uint index);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableVertexAttribute(uint index);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlActiveTextureSlot(int slot);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableTexture(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableTexture();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableTextureCubemap(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableTextureCubemap();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlTextureParameters(uint id, int param1, int value);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlCubemapParameters(uint id, int param1, int value);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableShader(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableShader();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableFramebuffer(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableFramebuffer();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlGetActiveFramebuffer();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlActiveDrawBuffers(int count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlBlitFramebuffer(int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, int bufferMask);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlBindFramebuffer(uint target, uint framebuffer);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableColorBlend();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableColorBlend();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableDepthTest();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableDepthTest();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableDepthMask();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableDepthMask();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableBackfaceCulling();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableBackfaceCulling();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlColorMask(byte r, byte g, byte b, byte a);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetCullFace(int mode);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableScissorTest();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableScissorTest();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlScissor(int x, int y, int width, int height);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnablePointMode();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisablePointMode();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableWireMode();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableWireMode();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetLineWidth(float width);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern float rlGetLineWidth();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableSmoothLines();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableSmoothLines();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlEnableStereoRender();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDisableStereoRender();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern byte rlIsStereoRenderEnabled();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlClearColor(byte r, byte g, byte b, byte a);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlClearScreenBuffers();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlCheckErrors();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetBlendMode(int mode);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetBlendFactors(int glSrcFactor, int glDstFactor, int glEquation);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetBlendFactorsSeparate(int glSrcRGB, int glDstRGB, int glSrcAlpha, int glDstAlpha, int glEqRGB, int glEqAlpha);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlglInit(int width, int height);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlglClose();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlLoadExtensions(void* loader);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int rlGetVersion();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetFramebufferWidth(int width);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int rlGetFramebufferWidth();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetFramebufferHeight(int height);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int rlGetFramebufferHeight();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlGetTextureIdDefault();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlGetShaderIdDefault();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int* rlGetShaderLocsDefault();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern rlRenderBatch rlLoadRenderBatch(int numBuffers, int bufferElements);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadRenderBatch(rlRenderBatch batch);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawRenderBatch(rlRenderBatch* batch);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetRenderBatchActive(rlRenderBatch* batch);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawRenderBatchActive();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern byte rlCheckRenderBatchLimit(int vCount);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetTexture(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadVertexArray();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadVertexBuffer(void* buffer, int size, byte dynamic);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadVertexBufferElement(void* buffer, int size, byte dynamic);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUpdateVertexBuffer(uint bufferId, void* data, int dataSize, int offset);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUpdateVertexBufferElements(uint id, void* data, int dataSize, int offset);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadVertexArray(uint vaoId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadVertexBuffer(uint vboId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetVertexAttribute(uint index, int compSize, int type, byte normalized, int stride, int offset);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetVertexAttributeDivisor(uint index, int divisor);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetVertexAttributeDefault(int locIndex, void* value, int attribType, int count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawVertexArray(int offset, int count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawVertexArrayElements(int offset, int count, void* buffer);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawVertexArrayInstanced(int offset, int count, int instances);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlDrawVertexArrayElementsInstanced(int offset, int count, void* buffer, int instances);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadTexture(void* data, int width, int height, int format, int mipmapCount);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadTextureDepth(int width, int height, byte useRenderBuffer);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadTextureCubemap(void* data, int size, int format, int mipmapCount);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUpdateTexture(uint id, int offsetX, int offsetY, int width, int height, int format, void* data);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlGetGlTextureFormats(int format, uint* glInternalFormat, uint* glFormat, uint* glType);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern sbyte* rlGetPixelFormatName(uint format);
+        public static extern string rlGetPixelFormatName(uint format);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadTexture(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlGenTextureMipmaps(uint id, int width, int height, int format, int* mipmaps);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void* rlReadTexturePixels(uint id, int width, int height, int format);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern byte* rlReadScreenPixels(int width, int height);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadFramebuffer();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlFramebufferAttach(uint fboId, uint texId, int attachType, int texType, int mipLevel);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern byte rlFramebufferComplete(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadFramebuffer(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern uint rlLoadShaderCode(sbyte* vsCode, sbyte* fsCode);
+        public static extern uint rlLoadShaderCode(string vsCode, string fsCode);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
-        public static extern uint rlCompileShader(sbyte* shaderCode, int type);
+        public static extern uint rlCompileShader(string shaderCode, int type);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadShaderProgram(uint vShaderId, uint fShaderId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadShaderProgram(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int rlGetLocationUniform(uint shaderId, sbyte* uniformName);
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int rlGetLocationUniform(uint shaderId, string uniformName);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int rlGetLocationAttrib(uint shaderId, sbyte* attribName);
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int rlGetLocationAttrib(uint shaderId, string attribName);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetUniform(int locIndex, void* value, int uniformType, int count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetUniformMatrix(int locIndex, Matrix mat);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetUniformMatrices(int locIndex, Matrix* mat, int count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetUniformSampler(int locIndex, uint textureId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetShader(uint id, int* locs);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadComputeShaderProgram(uint shaderId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlComputeShaderDispatch(uint groupX, uint groupY, uint groupZ);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlLoadShaderBuffer(uint size, void* data, int usageHint);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUnloadShaderBuffer(uint ssboId);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlUpdateShaderBuffer(uint id, void* data, uint dataSize, uint offset);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlBindShaderBuffer(uint id, uint index);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlReadShaderBuffer(uint id, void* dest, uint count, uint offset);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlCopyShaderBuffer(uint destId, uint srcId, uint destOffset, uint srcOffset, uint count);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 
         public static extern uint rlGetShaderBufferSize(uint id);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlBindImageTexture(uint id, uint index, int format, byte @readonly);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern Matrix rlGetMatrixModelview();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern Matrix rlGetMatrixProjection();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern Matrix rlGetMatrixTransform();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern Matrix rlGetMatrixProjectionStereo(int eye);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern Matrix rlGetMatrixViewOffsetStereo(int eye);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetMatrixProjection(Matrix proj);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetMatrixModelview(Matrix view);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetMatrixProjectionStereo(Matrix right, Matrix left);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlSetMatrixViewOffsetStereo(Matrix right, Matrix left);
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlLoadDrawCube();
 
-        [DllImport("rlgl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void rlLoadDrawQuad();
+
+        [DllImport("RlGl", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void rlSdlLoadExtensions();
+
+
+        public const int RL_DEFAULT_BATCH_BUFFER_ELEMENTS = 8192;
+
+        public const int RL_DEFAULT_BATCH_BUFFERS = 1;
+
+        public const int RL_DEFAULT_BATCH_DRAWCALLS = 256;
+
+        public const int RL_DEFAULT_BATCH_MAX_TEXTURE_UNITS = 4;
+
+        public const int RL_MAX_MATRIX_STACK_SIZE = 32;
+
+        public const int RL_MAX_SHADER_LOCATIONS = 32;
+
+        public const double RL_CULL_DISTANCE_NEAR = 0.05;
+
+        public const double RL_CULL_DISTANCE_FAR = 4000.0;
+
+        public const int RL_TEXTURE_WRAP_S = 0x2802;
+
+        public const int RL_TEXTURE_WRAP_T = 0x2803;
+
+        public const int RL_TEXTURE_MAG_FILTER = 0x2800;
+
+        public const int RL_TEXTURE_MIN_FILTER = 0x2801;
+
+        public const int RL_TEXTURE_FILTER_NEAREST = 0x2600;
+
+        public const int RL_TEXTURE_FILTER_LINEAR = 0x2601;
+
+        public const int RL_TEXTURE_FILTER_MIP_NEAREST = 0x2700;
+
+        public const int RL_TEXTURE_FILTER_NEAREST_MIP_LINEAR = 0x2702;
+
+        public const int RL_TEXTURE_FILTER_LINEAR_MIP_NEAREST = 0x2701;
+
+        public const int RL_TEXTURE_FILTER_MIP_LINEAR = 0x2703;
+
+        public const int RL_TEXTURE_FILTER_ANISOTROPIC = 0x3000;
+
+        public const int RL_TEXTURE_MIPMAP_BIAS_RATIO = 0x4000;
+
+        public const int RL_TEXTURE_WRAP_REPEAT = 0x2901;
+
+        public const int RL_TEXTURE_WRAP_CLAMP = 0x812F;
+
+        public const int RL_TEXTURE_WRAP_MIRROR_REPEAT = 0x8370;
+
+        public const int RL_TEXTURE_WRAP_MIRROR_CLAMP = 0x8742;
+
+        public const int RL_MODELVIEW = 0x1700;
+
+        public const int RL_PROJECTION = 0x1701;
+
+        public const int RL_TEXTURE = 0x1702;
+
+        public const int RL_LINES = 0x0001;
+
+        public const int RL_TRIANGLES = 0x0004;
+
+        public const int RL_QUADS = 0x0007;
+
+        public const int RL_UNSIGNED_BYTE = 0x1401;
+
+        public const int RL_FLOAT = 0x1406;
+
+        public const int RL_STREAM_DRAW = 0x88E0;
+
+        public const int RL_STREAM_READ = 0x88E1;
+
+        public const int RL_STREAM_COPY = 0x88E2;
+
+        public const int RL_STATIC_DRAW = 0x88E4;
+
+        public const int RL_STATIC_READ = 0x88E5;
+
+        public const int RL_STATIC_COPY = 0x88E6;
+
+        public const int RL_DYNAMIC_DRAW = 0x88E8;
+
+        public const int RL_DYNAMIC_READ = 0x88E9;
+
+        public const int RL_DYNAMIC_COPY = 0x88EA;
+
+        public const int RL_FRAGMENT_SHADER = 0x8B30;
+
+        public const int RL_VERTEX_SHADER = 0x8B31;
+
+        public const int RL_COMPUTE_SHADER = 0x91B9;
+
+        public const int RL_ZERO = 0;
+
+        public const int RL_ONE = 1;
+
+        public const int RL_SRC_COLOR = 0x0300;
+
+        public const int RL_ONE_MINUS_SRC_COLOR = 0x0301;
+
+        public const int RL_SRC_ALPHA = 0x0302;
+
+        public const int RL_ONE_MINUS_SRC_ALPHA = 0x0303;
+
+        public const int RL_DST_ALPHA = 0x0304;
+
+        public const int RL_ONE_MINUS_DST_ALPHA = 0x0305;
+
+        public const int RL_DST_COLOR = 0x0306;
+
+        public const int RL_ONE_MINUS_DST_COLOR = 0x0307;
+
+        public const int RL_SRC_ALPHA_SATURATE = 0x0308;
+
+        public const int RL_CONSTANT_COLOR = 0x8001;
+
+        public const int RL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
+
+        public const int RL_CONSTANT_ALPHA = 0x8003;
+
+        public const int RL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
+
+        public const int RL_FUNC_ADD = 0x8006;
+
+        public const int RL_MIN = 0x8007;
+
+        public const int RL_MAX = 0x8008;
+
+        public const int RL_FUNC_SUBTRACT = 0x800A;
+
+        public const int RL_FUNC_REVERSE_SUBTRACT = 0x800B;
+
+        public const int RL_BLEND_EQUATION = 0x8009;
+
+        public const int RL_BLEND_EQUATION_RGB = 0x8009;
+
+        public const int RL_BLEND_EQUATION_ALPHA = 0x883D;
+
+        public const int RL_BLEND_DST_RGB = 0x80C8;
+
+        public const int RL_BLEND_SRC_RGB = 0x80C9;
+
+        public const int RL_BLEND_DST_ALPHA = 0x80CA;
+
+        public const int RL_BLEND_SRC_ALPHA = 0x80CB;
+
+        public const int RL_BLEND_COLOR = 0x8005;
+
+        public const int RL_READ_FRAMEBUFFER = 0x8CA8;
+
+        public const int RL_DRAW_FRAMEBUFFER = 0x8CA9;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION = 0;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD = 1;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL = 2;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR = 3;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT = 4;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2 = 5;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_INDICES = 6;
+
+        public const int RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCE_TX = 9;
+
+        public const rlShaderLocationIndex RL_SHADER_LOC_MAP_DIFFUSE = RL_SHADER_LOC_MAP_ALBEDO;
+
+        public const rlShaderLocationIndex RL_SHADER_LOC_MAP_SPECULAR = RL_SHADER_LOC_MAP_METALNESS;
     }
 }
