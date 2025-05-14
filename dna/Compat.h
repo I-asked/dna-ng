@@ -89,4 +89,12 @@
 #define TMALLOC(t) (t*)malloc(sizeof(t))
 #define TMALLOCFOREVER(t) (t*)mallocForever(sizeof(t))
 
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
 #endif

@@ -180,7 +180,7 @@ static char* tableDefs[] = {
 	// 0x0F
 	"ssxsii\x02i",
 	// 0x10
-	"ix\x04x",
+	"ii\x04i",
 	// 0x11
 	"B*",
 	// 0x12

@@ -362,6 +362,14 @@ struct tMD_ClassLayout_ {
 };
 typedef struct tMD_ClassLayout_ tMD_ClassLayout;
 
+// Table 0x10 - FieldLayout
+#define MD_TABLE_FIELDLAYOUT 0x10
+typedef struct tMD_FieldLayout_ tMD_FieldLayout;
+struct tMD_FieldLayout_ {
+	U32 offset;
+	IDX_TABLE field;
+};
+
 // Table 0x11 - StandAloneSig
 struct tMD_StandAloneSig_ {
 	BLOB_ signature;

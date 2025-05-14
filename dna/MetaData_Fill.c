@@ -290,7 +290,6 @@ void MetaData_Fill_TypeDef_(tMD_TypeDef *pTypeDef, tMD_TypeDef **ppClassTypeArgs
 					MetaData_Fill_FieldDef(pTypeDef, pFieldDef, 0, ppClassTypeArgs);
 				} else {
 					MetaData_Fill_FieldDef(pTypeDef, pFieldDef, instanceMemSize, ppClassTypeArgs);
-					instanceMemSize += pFieldDef->memSize;
 
           tMD_FieldDef *pCurSubFd = pFieldDef;
 					while (pCurSubFd->pType->stackType == EVALSTACK_VALUETYPE && pCurSubFd->memSize > sizeof(VADDR)) {
@@ -299,11 +298,26 @@ void MetaData_Fill_TypeDef_(tMD_TypeDef *pTypeDef, tMD_TypeDef **ppClassTypeArgs
             }
             pCurSubFd = pCurSubFd->pType->ppFields[0];
           }
+
+					U32 totalFieldSz = 0;
           U32 pad = pFieldDef->memOffset % pCurSubFd->memSize;
+
+					for (j=1; j<=pMetaData->tables.numRows[MD_TABLE_FIELDLAYOUT]; j++) {
+						tMD_FieldLayout *layout = MetaData_GetTableRow(pMetaData, MAKE_TABLE_INDEX(MD_TABLE_FIELDLAYOUT, j));
+						if (layout->field == pFieldDef->tableIndex) {
+							pFieldDef->memOffset = layout->offset;
+							pad = 0;
+						}
+					}
+
           if (pad > 0) {
             pFieldDef->memOffset += pad;
-            instanceMemSize += pad;
+            totalFieldSz += pad;
           }
+
+					totalFieldSz += pFieldDef->memSize;
+
+					instanceMemSize = max(instanceMemSize, totalFieldSz + pFieldDef->memOffset);
 				}
 				pTypeDef->ppFields[i] = pFieldDef;
 			}

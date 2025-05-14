@@ -44,7 +44,9 @@
 #undef DIAG_GC
 
 // Measure how long the entire .NET programme execution takes
+#ifdef _DEBUG
 #define DIAG_TOTAL_TIME
+#endif
 
 
 
