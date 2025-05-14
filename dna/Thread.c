@@ -233,8 +233,6 @@ I32 Thread_Execute() {
                         pThread->pAsync = NULL;
                         break;
                     }
-
-                    return 0;
                 }
                 else {
 					// This is blocking IO, or a lock
@@ -269,10 +267,7 @@ I32 Thread_Execute() {
 			if (pThread == pPrevThread) {
 				// When it gets here, it means that all threads are currently blocked.
 				//printf("All blocked; sleep(%d)\n", minSleepTime);
-                // Execution needs to unwind if everything is blocked in javascript or it will
-                // hang the browser's main thread, we need to schedule a call back into this method at a later time
-                return minSleepTime;
-				// SleepMS(minSleepTime);
+				SleepMS(minSleepTime);
 			}
 		}
 	}

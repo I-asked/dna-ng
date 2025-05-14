@@ -127,11 +127,11 @@ static U32 GetSize(tHeapEntry *pHeapEntry) {
 	tMD_TypeDef *pType = pHeapEntry->pTypeDef;
 	if (pType == types[TYPE_SYSTEM_STRING]) {
 		// If it's a string, return the string length in bytes
-		return SystemString_GetNumBytes((HEAP_PTR)(pHeapEntry + 1));
+		return SystemString_GetNumBytes((HEAP_PTR)(pHeapEntry->memory));
 	}
 	if (TYPE_ISARRAY(pType)) {
 		// If it's an array, return the array length * array element size
-		return SystemArray_GetNumBytes((HEAP_PTR)(pHeapEntry + 1), pType->pArrayElementType);
+		return SystemArray_GetNumBytes((HEAP_PTR)(pHeapEntry->memory), pType->pArrayElementType);
 	}
 	// If it's not string or array, just return the instance memory size
 	return pType->instanceMemSize;
@@ -282,6 +282,7 @@ static void GarbageCollect() {
 		U32 moreRootsAdded = 0;
 		U32 rootsEntryNumPointers;
 		void **pRootsEntryMem;
+		void *ppMemRef;
 
 		// Get a piece of memory off the list of heap memory roots.
 		pRootsEntry = &heapRoots.pHeapEntries[heapRoots.num - 1];
@@ -291,8 +292,12 @@ static void GarbageCollect() {
 		pRootsEntry->numPointers = 0;
 		pRootsEntry->pMem = NULL;
 		// Iterate through all pointers in it
-		for (i=0; i<rootsEntryNumPointers; i++) {
-			void *pMemRef = pRootsEntryMem[i];
+		if (!pRootsEntryMem) {
+		  heapRoots.num--;
+      continue;
+    }
+		for (ppMemRef = pRootsEntryMem; ppMemRef <= (void *)pRootsEntryMem + (rootsEntryNumPointers - sizeof(void *)); ppMemRef += 1) {
+		  void *pMemRef = *(void **)ppMemRef;
 			// Quick escape for known non-memory 
 			if (pMemRef == NULL) {
 				continue;
@@ -436,13 +441,13 @@ U32 Heap_GetTotalMemory() {
 void Heap_SetRoots(tHeapRoots *pHeapRoots, void *pRoots, U32 sizeInBytes) {
 	tHeapRootEntry *pRootEntry;
 
-	Assert((sizeInBytes & 0x3) == 0);
+	//Assert((sizeInBytes & 0x3) == 0);
 	if (pHeapRoots->num >= pHeapRoots->capacity) {
 		pHeapRoots->capacity <<= 1;
 		pHeapRoots->pHeapEntries = (tHeapRootEntry*)realloc(pHeapRoots->pHeapEntries, pHeapRoots->capacity * sizeof(tHeapRootEntry));
 	}
 	pRootEntry = &pHeapRoots->pHeapEntries[pHeapRoots->num++];
-	pRootEntry->numPointers = sizeInBytes >> 2;
+	pRootEntry->numPointers = sizeInBytes;
 	pRootEntry->pMem = pRoots;
 }
 

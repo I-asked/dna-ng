@@ -28,7 +28,7 @@
 
 static U32 Internal_TryEntry_Check(PTR pThis_, PTR pParams, PTR pReturnValue, tAsyncCall *pAsync) {
 	HEAP_PTR pObj = ((HEAP_PTR*)pParams)[0];
-	I32 timeout = ((I32*)pParams)[1];
+	I32 timeout = *(I32*)(pParams + sizeof(VADDR));
 	U32 ret = Heap_SyncTryEnter(pObj);
 	U64 now;
 	if (ret) {

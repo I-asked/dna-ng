@@ -3066,9 +3066,22 @@ JIT_INIT_OBJECT_start:
 JIT_INIT_OBJECT_end:
 	GO_NEXT();
 
+JIT_BOX_INTNATIVE_start:
+	OPCODE_USE(JIT_BOX_INTNATIVE);
+	{
+		tMD_TypeDef *pTypeDef;
+
+		pTypeDef = (tMD_TypeDef*)GET_OP();
+		heapPtr = Heap_AllocType(pTypeDef);
+		VADDR pMem = (VADDR)POP_PTR();
+		*(VADDR*)heapPtr = pMem;
+		PUSH_O(heapPtr);
+	}
+JIT_BOX_INTNATIVE_end:
+	GO_NEXT();
+
 JIT_BOX_INT32_start:
 JIT_BOX_F32_start:
-JIT_BOX_INTNATIVE_start:
 	OPCODE_USE(JIT_BOX_INT32);
 	{
 		tMD_TypeDef *pTypeDef;
@@ -3081,7 +3094,6 @@ JIT_BOX_INTNATIVE_start:
 	}
 JIT_BOX_INT32_end:
 JIT_BOX_F32_end:
-JIT_BOX_INTNATIVE_end:
 	GO_NEXT();
 
 JIT_BOX_INT64_start:
