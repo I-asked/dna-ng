@@ -5,6 +5,8 @@ namespace System.IO {
 
 		public FileNotFoundException(string msg) : base(msg) { }
 
+		public FileNotFoundException(string msg, string file) : base(msg) { }
+
 	}
 }
 
