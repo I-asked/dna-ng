@@ -338,6 +338,14 @@ tMD_TypeDef* Type_GetTypeFromSig(tMetaData *pMetaData, SIG *pSig, tMD_TypeDef **
 				return Type_GetTypeFromSig(pMetaData, pSig, ppClassTypeArgs, ppMethodTypeArgs);
 			}
 
+		case ELEMENT_TYPE_CMOD_OPT:
+		case ELEMENT_TYPE_CMOD_REQD:
+			{
+			  // TODO: Actually do something maybe?
+				entry = MetaData_DecodeSigEntryToken(pSig);
+				return MetaData_GetTypeDefFromDefRefOrSpec(pMetaData, entry, ppClassTypeArgs, ppMethodTypeArgs);
+			}
+
 		default:
 			Crash("Type_GetTypeFromSig(): Cannot handle signature element type: 0x%02x", entry);
 			FAKE_RETURN;

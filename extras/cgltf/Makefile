@@ -1,17 +1,16 @@
 VPATH := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 
-TARGETNAME := RlGl
+TARGETNAME := cgltf
 TARGET := lib$(TARGETNAME).so
 INCFLAGS := $(addprefix -I,$(shell $(CC) -xc /dev/null -E -Wp,-v 2>&1 |sed -n 's,^ ,,p'))
 
-OBJS := rlgl.o
+OBJS := cgltf.o
 
-INCLUDES_RLGL := \
-								 rlgl_sdl.h
+INCLUDES_CGLTF := \
+								 cgltf.h
 
-INCLUDES_RLGL_ALL := \
-										 rlgl_sdl.h \
-										 rlgl.h
+INCLUDES_CGLTF_ALL := \
+										 cgltf.h
 
 CSPIG ?= $(shell command -v ClangSharpPInvokeGenerator)
 ifeq ($(CSPIG),)
@@ -27,29 +26,19 @@ PKGCONFIG ?= $(shell command -v pkg-config)
 
 CFLAGS += -fPIC -fvisibility=hidden
 
-CFLAGS += -DGRAPHICS_API_OPENGL_33
 CFLAGS += -DBUILD_LIBTYPE_SHARED
-
-ifneq ($(PKGCONFIG),)
-LDLIBS += $(shell $(PKGCONFIG) --libs sdl2)
-LDLIBS += $(shell $(PKGCONFIG) --libs glu)
-else
-LDLIBS += -lSDL2
-LDLIBS += -lGLU -lGL
-endif
 
 CSPIGFLAGS += -x c -std c99 -c generate-macro-bindings -c compatible-codegen -D CS_CODEGEN
 
 .PHONY: all
-all: $(TARGET) RlGl.cs
+all: $(TARGET) cgltf.cs
 
-RlGl.cs: $(INCLUDES_RLGL)
-	$(CSPIG) $(CSPIGFLAGS) $(addprefix -t ,$(INCLUDES_RLGL_ALL)) $(addprefix -f ,$^) -o $@ -l $(TARGETNAME) -n RlGl $(INCFLAGS) ||:
+cgltf.cs: $(INCLUDES_CGLTF)
+	$(CSPIG) $(CSPIGFLAGS) $(addprefix -t ,$(INCLUDES_CGLTF_ALL)) $(addprefix -f ,$^) -o $@ -l $(TARGETNAME) -n cgltf $(INCFLAGS) ||:
 	$(SED) -i \
 		-e '/NativeType\w*("#define/d' \
 		-e 's/\(^\s*\)\?\[\(\w*:\s*\)\?NativeType\w*("[^"]*")\]\s*//g' \
 		-e 's/sbyte\s*\*/string/g' \
-		-e 's/int \(RL_SHADER_LOC\)/rlShaderLocationIndex \1/g' \
 		-e '/= ;$$/d' $@ \
 		-e '/const U*IntPtr/d' \
 		-e '/(nu*int)/d' \
@@ -63,4 +52,4 @@ clean:
 	$(RM) $(OBJS)
 
 distclean: clean
-	$(RM) RlGl.cs $(TARGET)
+	$(RM) cgltf.cs $(TARGET)

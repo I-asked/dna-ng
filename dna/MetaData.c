@@ -174,7 +174,7 @@ static char* tableDefs[] = {
 	// 0x0C
 	"2i:iB*",
 	// 0x0D
-	NULL,
+	"3iB*",
 	// 0x0E
 	"ssxs4iB*",
 	// 0x0F
@@ -248,7 +248,7 @@ static unsigned char* codedTags[] = {
 	// HasConstant
 	"\x04\x08\x17z",
 	// HasCustomAttribute
-	"\x06\x04\x01\x02\x08\x09\x0A\x00\x0E\x17\x14\x11\x1A\x1B\x20\x23\x26\x27\x28zzzzzzzzzzzzz",
+	"\x06\x04\x01\x02\x08\x09\x0A\x00\x0E\x17\x14\x11\x1A\x1B\x20\x23\x26\x27\x28\x2Bzzzzzzzzzzzz",
 	// HasFieldMarshall
 	"\x04\x08",
 	// HasDeclSecurity
@@ -394,8 +394,7 @@ static void* LoadSingleTable(tMetaData *pThis, tRVA *pRVA, int tableID, void **p
 							unsigned char tag = *pSource & ((1 << tagBits) - 1);
 							int idxIntoTableID = pCoding[tag]; // The actual table index that we're looking for
 							if (idxIntoTableID < 0 || idxIntoTableID > MAX_TABLES) {
-								printf("Error: Bad table index: 0x%02x\n", idxIntoTableID);
-								exit(1);
+								Crash("Error: Bad table index: 0x%02x\n", idxIntoTableID);
 							}
 							if (pThis->tables.codedIndex32Bit[ofs]) {
 								// Use 32-bit number

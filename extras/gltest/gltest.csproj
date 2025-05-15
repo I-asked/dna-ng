@@ -4,9 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net3.5</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="cgltf" Version="1.0.0" />
     <PackageReference Include="RlGl" Version="1.0.0" />
     <PackageReference Include="SDL2" Version="1.0.0" />
   </ItemGroup>

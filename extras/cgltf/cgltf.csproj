@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="SDL2.cs" />
+    <Compile Include="cgltf.cs" />
   </ItemGroup>
 
-  <Target Name="SDL2" BeforeTargets="BeforeCompile">
-    <Exec Command="make -f $(ProjectDir)/Makefile distclean all clean"/>
+  <Target Name="cgltf" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile distclean cgltf.cs clean"/>
   </Target>
 
-  <Target Name="Clean SDL2" BeforeTargets="CoreClean">
+  <Target Name="Clean cgltf" BeforeTargets="CoreClean">
     <Exec Command="make -f $(ProjectDir)/Makefile distclean"/>
   </Target>
 

@@ -1,15 +1,42 @@
 ﻿using System;
-using System.Threading;
-using System.Runtime.InteropServices;
+using System.IO;
 using SDL2;
 using static SDL2.Methods;
 using RlGl;
 using static RlGl.Methods;
-using GL;
-using static GL.Methods;
+using cgltf;
+using static cgltf.Methods;
+using System.Collections.Generic;
 
-class Program {
+namespace GLTest;
+
+static class Program {
   static unsafe void Main(string[] args) {
+    List<float[]> meshes;
+    {
+      cgltf_data *data;
+      cgltf_options options;
+      if (cgltf_parse_file(&options, "file.glb", &data) != cgltf_result.cgltf_result_success)
+      {
+        Environment.Exit(1);
+      }
+
+      cgltf_buffer_view *verticesView;
+      for (int i = 0; i < (int)data->buffer_views_count; ++i) {
+
+      }
+      for (int i = 0; i < (int)data->meshes_count; ++i)
+      {
+        cgltf_mesh *mesh = &data->meshes[i];
+        for (int j = 0; j < (int)mesh->primitives_count; ++j)
+        {
+          cgltf_primitive *prim = &mesh->primitives[i];
+          cgltf_accessor* acc = prim->indices;
+          float[] glmesh = new float[(int)acc->count];
+        }
+      }
+    }
+
     SDL_Init(SDL_INIT_EVERYTHING);
 
     SDL_Window *win;
@@ -48,7 +75,9 @@ class Program {
         shouldQuit = true;
         break;
       case SDL_EventType.SDL_KEYDOWN:
-        if (((SDL_KeyboardEvent *)&evt)->keysym.scancode == SDL_Scancode.SDL_SCANCODE_ESCAPE) {
+        Console.WriteLine(evt.key.keysym.scancode);
+
+        if (evt.key.keysym.scancode == SDL_Scancode.SDL_SCANCODE_ESCAPE) {
           shouldQuit = true;
         }
         break;
@@ -56,9 +85,13 @@ class Program {
 
       rlClearScreenBuffers();
 
-      rlColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
       SDL_GL_SwapWindow(win);
     }
+
+    rlglClose();
+
+    SDL_GL_DeleteContext(ctx);
+
+    SDL_DestroyWindow(win);
   }
 }

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net3.5</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDependencyFile>False</GenerateDependencyFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <NativeExt>so</NativeExt>
+    <NativePre>lib</NativePre>
+    <NativeArch Condition="$(BuildArch) == ''">x64</NativeArch>
+    <NativeArch Condition="$(BuildArch) != ''">$(BuildArch)</NativeArch>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <NativeExt>dylib</NativeExt>
+    <NativePre>lib</NativePre>
+    <NativeArch Condition="$(BuildArch) == ''">x86_x64</NativeArch>
+    <NativeArch Condition="$(BuildArch) != ''">$(BuildArch)</NativeArch>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <NativeExt>dll</NativeExt>
+    <NativePre>$(Configuration)/</NativePre>
+    <NativeArch Condition="$(BuildArch) == ''">x64</NativeArch>
+    <NativeArch Condition="$(BuildArch) != ''">$(BuildArch)</NativeArch>
+  </PropertyGroup>
+
+  <Target Name="libRlGl" BeforeTargets="BeforeCompile">
+    <Exec Command="make -C $(OutputPath) -f $(ProjectDir)/Makefile.RlGl $(NativePre)RlGl.$(NativeExt)"/>
+  </Target>
+
+  <ItemGroup>
+    <Content Include="$(OutputPath)$(NativePre)RlGl.$(NativeExt)" CopyToOutputDirectory="PreserveNewest" Condition="Exists('$(OutputPath)$(NativePre)RlGl.$(NativeExt)')" />
+  </ItemGroup>
+
+</Project>

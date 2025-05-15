@@ -336,6 +336,14 @@ struct tMD_CustomAttribute_ {
 typedef struct tMD_CustomAttribute_ tMD_CustomAttribute;
 #define MD_TABLE_CUSTOMATTRIBUTE 0x0c
 
+// Table 0x0D - FieldMarshal
+struct tMD_FieldMarshal_ {
+	IDX_TABLE pParent;
+	BLOB_ pNativeType;
+};
+typedef struct tMD_FieldMarshal_ tMD_FieldMarshal;
+#define MD_TABLE_FIELDMARSHAL 0x0d
+
 #define MD_TABLE_DECLSECURITY 0x0e
 typedef struct tMD_DeclSecurity_ tMD_DeclSecurity;
 struct tMD_DeclSecurity_ {

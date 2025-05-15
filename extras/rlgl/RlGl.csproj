@@ -4,21 +4,27 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net3.5</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <Target Name="libRlGl" BeforeTargets="BeforeCompile">
-    <Exec Command="make -f $(ProjectDir)/Makefile.RlGl distclean all clean"/>
+  <ItemGroup>
+    <Compile Include="GL.cs" />
+    <Compile Include="RlGl.cs" />
+  </ItemGroup>
+
+  <Target Name="RlGl" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile.RlGl distclean RlGl.cs clean"/>
   </Target>
 
-  <Target Name="Clean libRlGl" BeforeTargets="CoreClean">
+  <Target Name="Clean RlGl" BeforeTargets="CoreClean">
     <Exec Command="make -f $(ProjectDir)/Makefile.RlGl distclean"/>
   </Target>
 
-  <Target Name="libGL" BeforeTargets="BeforeCompile">
-    <Exec Command="make -f $(ProjectDir)/Makefile.GL distclean all clean"/>
+  <Target Name="GL" BeforeTargets="BeforeCompile">
+    <Exec Command="make -f $(ProjectDir)/Makefile.GL distclean GL.cs clean"/>
   </Target>
 
-  <Target Name="Clean libGL" BeforeTargets="CoreClean">
+  <Target Name="Clean GL" BeforeTargets="CoreClean">
     <Exec Command="make -f $(ProjectDir)/Makefile.GL distclean"/>
   </Target>
 

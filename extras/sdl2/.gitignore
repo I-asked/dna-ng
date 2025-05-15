@@ -3,5 +3,4 @@
 *.so
 *.o
 
-RlGl.cs
-GL.cs
+SDL2.cs
